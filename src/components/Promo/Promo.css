@@ -1,0 +1,20 @@
+.promo {
+  margin: 0;
+  background-color: #465DFF;
+
+  height: 100vh;
+  /* font-size: 40px;
+  line-height: 52px;
+  letter-spacing: -0.04em; */
+}
+
+.promo__title {
+  margin: 0;
+  padding: 0;
+  color: #FFFFFF;
+  font-weight: 400;
+}
+
+.promo__logo {
+  color: #FFFFFF;
+}
