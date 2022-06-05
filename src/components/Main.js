@@ -1,10 +1,11 @@
 import Promo from "./Promo/Promo";
+import AboutProject from "./AboutProject/AboutProject";
 
 const Main = () => {
   return (
     <>
       <Promo />
-      <h1>Hello</h1>
+      <AboutProject />
     </>
   )
 };
