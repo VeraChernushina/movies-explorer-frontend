@@ -1,4 +1,5 @@
 import './Promo.css';
+import promo from '../../images/promo-logo.svg';
 
 const Promo = () => {
   return (
@@ -6,7 +7,7 @@ const Promo = () => {
       <h1 className='promo__title'>
       Учебный проект студента факультета Веб-разработки.
       </h1>
-      <div className='promo__logo' />
+      <img className='promo__logo' src={promo} alt='Логотип Промо.' />
     </div>
   )
 };

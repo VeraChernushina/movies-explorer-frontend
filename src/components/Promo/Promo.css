@@ -1,11 +1,8 @@
 .promo {
   margin: 0;
+  position: relative;
   background-color: #465DFF;
-
   height: 100vh;
-  /* font-size: 40px;
-  line-height: 52px;
-  letter-spacing: -0.04em; */
 }
 
 .promo__title {
@@ -13,8 +10,17 @@
   padding: 0;
   color: #FFFFFF;
   font-weight: 400;
+  font-size: 40px;
+  line-height: 52px;
+  letter-spacing: -0.04em;
+  position: absolute;
+  top: 50px;
+  left: 70px;
+  max-width: 620px;
 }
 
 .promo__logo {
-  color: #FFFFFF;
+  position: absolute;
+  bottom: 60px;
+  right: 70px;
 }
