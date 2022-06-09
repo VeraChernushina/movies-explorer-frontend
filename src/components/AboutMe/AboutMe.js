@@ -1,4 +1,5 @@
 import './AboutMe.css';
+import photo from '../../images/myphoto.jpg';
 
 const AboutMe = () => {
   return (
@@ -9,13 +10,19 @@ const AboutMe = () => {
           <span className='about-me__name'>Вера</span>
           <span className='about-me__job'>Фронтенд-разработчик, 24 года</span>
           <span className='about-me__bio'>
-            Я родился и живу в Саратове, закончил факультет экономики СГУ. У меня есть жена 
-и дочь. Я люблю слушать музыку, а ещё увлекаюсь бегом. Недавно начал кодить. С 2015 года работал в компании «СКБ Контур». После того, как прошёл курс по веб-разработке, начал заниматься фриланс-заказами и ушёл с постоянной работы.
+            Я родилась и живу в Санкт-Петербурге, в 2021 году я закончила факультет ветеринарной медицины СПбГУВМ. 
+            Кодить я начала еще в школе, но заняться программированием серьезно я решилась только после университета. 
+            Я работаю в стартапе удаленно, что позволяет мне больше времени проводить с моей собакой. 
+            В свободное время я смотрю ситкомы, занимаюсь йогой и гуляю по моему прекрасному городу.
           </span>
-          <a className='about-me__link' href='#'>Facebook</a>
+          <a className='about-me__link' href='https://www.facebook.com/v.chernushina/' target='_blank'>Facebook</a>
           <a className='about-me__link' href='https://github.com/VeraChernushina' target='_blank'>Github</a>
         </div>
-        <div className='about-me__photo'>Photo</div>
+        <img
+          className='about-me__photo'
+          src={photo}
+          alt='Мое фото'
+        />
       </div>
     </div>
   )

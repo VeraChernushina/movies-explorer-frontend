@@ -11,6 +11,7 @@
   color: #000000;
   padding-bottom: 23px;
   border-bottom: 1px solid #000;
+  margin-bottom: 66px;
 }
 
 .about-me__content {
@@ -63,4 +64,12 @@
 
 .about-me__link:first-of-type {
   margin-right: 20px;
+}
+
+.about-me__photo {
+  margin: 0;
+  padding: 0;
+  width: 270px;
+  height: 327px;
+  border-radius: 10px;
 }
