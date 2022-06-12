@@ -104,3 +104,57 @@
     margin-bottom: 93px;
   }
 }
+
+@media screen and (max-width: 320px) {
+  .about {
+    padding: 70px 18px;
+  }
+
+  .about__title {
+    margin-bottom: 60px;
+    font-size: 18px;
+    line-height: 22px;
+    padding-bottom: 28px;
+  }
+
+  .about__description-blocks {
+    flex-direction: column;
+    gap: 56px;
+    margin-bottom: 60px;
+  }
+
+  .about__description-block {
+    margin-bottom: 0;
+  }
+
+  .about__description-block h3 {
+    font-size: 18px;
+    line-height: 22px;
+    margin-bottom: 16px;
+  }
+
+  .about__description-block span {
+    font-size: 11px;
+    line-height: 16px;
+  }
+
+  .about__time-bar {
+    height: 35px;
+    font-size: 11px;
+    line-height: 13px;
+    margin-bottom: 10px;
+  }
+
+  .about__backend {
+    width: 36%;
+  }
+
+  .about__time-text {
+    font-size: 11px;
+    line-height: 13px;
+  }
+
+  .about__backend-text {
+    width: 36%;
+  }
+}

@@ -81,3 +81,40 @@
     margin-bottom: 83px;
   }
 }
+
+@media screen and (max-width: 320px) {
+  .techs {
+    padding: 70px 18px;
+  }
+
+  .techs__title {
+    font-size: 18px;
+    line-height: 22px;
+    margin-bottom: 60px;
+    padding-bottom: 28px;
+  }
+
+  .techs__large-title {
+    margin-bottom: 24px;
+    font-size: 30px;
+    line-height: 36px;
+  }
+
+  .techs__description {
+    font-size: 11px;
+    line-height: 16px;
+    margin-bottom: 50px;
+  }
+
+  .techs__list {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: 84px 84px;
+  }
+
+  .techs__list li {
+    font-size: 12px;
+    line-height: 15px;
+    padding: 21px 15px;
+  }
+}

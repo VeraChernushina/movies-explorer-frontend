@@ -43,5 +43,20 @@
     position: unset;
     width: 680px;
     height: 230px;
+    display: block;
+    max-width: 100vw;
+    object-fit: cover;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .promo {
+    padding: 183px 10px 0;
+  }
+
+  .promo__title {
+    margin-bottom: 60px;
+    font-size: 31px;
+    line-height: 39px;
   }
 }
