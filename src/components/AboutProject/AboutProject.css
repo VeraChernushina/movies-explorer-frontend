@@ -93,3 +93,14 @@
   justify-content: center;
   width: 80%;
 }
+
+@media screen and (max-width: 768px) {
+  .about {
+    padding: 90px 50px;
+  }
+
+  .about__description-block {
+    max-width: 319px;
+    margin-bottom: 93px;
+  }
+}

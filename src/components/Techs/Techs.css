@@ -63,3 +63,21 @@
   letter-spacing: -0.04em;
   color: #000000;
 }
+
+@media screen and (max-width: 768px) {
+  .techs {
+    padding: 90px 50px;
+  }
+
+  .techs__title {
+    margin-bottom: 80px;
+  }
+
+  .techs__large-title {
+    margin-bottom: 22px;
+  }
+
+  .techs__description {
+    margin-bottom: 83px;
+  }
+}

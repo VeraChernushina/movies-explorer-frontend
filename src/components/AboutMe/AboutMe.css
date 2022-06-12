@@ -67,9 +67,36 @@
 }
 
 .about-me__photo {
-  margin: 0;
-  padding: 0;
   width: 270px;
   height: 327px;
   border-radius: 10px;
+}
+
+@media screen and (max-width: 768px) {
+  .about-me {
+    padding: 90px 50px;
+  }
+
+  .about-me__name {
+    margin-bottom: 16px;
+    font-size: 40px;
+    line-height: 40px;
+  }
+
+  .about-me__job {
+    margin-bottom: 20px;
+    font-size: 12px;
+    line-height: 18px;
+  }
+
+  .about-me__bio {
+    margin-bottom: 87px;
+    font-size: 12px;
+    line-height: 18px;
+  }
+
+  .about-me__photo {
+    width: 255px;
+    height: 307px;
+  }
 }
