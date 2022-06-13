@@ -5,16 +5,18 @@ import AboutMe from "./AboutMe/AboutMe";
 import Portfolio from "./Portfolio/Portfolio";
 import Header from "./Header/Header";
 import Footer from "./Footer/Footer";
+import Movies from "./Movies/Movies";
 
 const Main = () => {
   return (
     <>
       <Header />
-      <Promo />
+      {/* <Promo />
       <AboutProject />
       <Techs />
       <AboutMe />
-      <Portfolio />
+      <Portfolio /> */}
+      <Movies />
       <Footer />
     </>
   )

@@ -1,0 +1,24 @@
+.cards {
+  padding: 70px;
+}
+
+.cards__list {
+  display: flex;
+  column-gap: 30px;
+  row-gap: 60px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 50px;
+}
+
+.cards__button {
+  width: 100%;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 15px;
+  background-color: #F9F9F9;
+  padding: 11px 0 9px;
+  cursor: pointer;
+}
