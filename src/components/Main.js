@@ -9,12 +9,13 @@ import Movies from "./Movies/Movies";
 import SavedMovies from "./SavedMovies/SavedMovies";
 import Register from "./Register/Register";
 import Login from "./Login/Login";
+import Profile from "./Profile/Profile";
 
 const Main = () => {
   return (
     <>
       <Header />
-      <Promo />
+      {/* <Promo />
       <AboutProject />
       <Techs />
       <AboutMe />
@@ -23,7 +24,8 @@ const Main = () => {
       <SavedMovies />
       <Footer />
       <Register />
-      <Login />
+      <Login /> */}
+      <Profile />
     </>
   )
 };
