@@ -8,20 +8,22 @@ import Footer from "./Footer/Footer";
 import Movies from "./Movies/Movies";
 import SavedMovies from "./SavedMovies/SavedMovies";
 import Register from "./Register/Register";
+import Login from "./Login/Login";
 
 const Main = () => {
   return (
     <>
-      {/* <Header /> */}
-      {/* <Promo />
+      <Header />
+      <Promo />
       <AboutProject />
       <Techs />
       <AboutMe />
       <Portfolio />
       <Movies />
       <SavedMovies />
-      <Footer /> */}
+      <Footer />
       <Register />
+      <Login />
     </>
   )
 };
