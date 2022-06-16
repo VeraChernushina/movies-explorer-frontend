@@ -19,10 +19,12 @@ const Login = () => {
       </div>
 
       <form className='login__form'>
-        <label className='login__label'>E-mail</label>
-        <input className='login__input' type='email' />
-        <label className='login__label'>Пароль</label>
-        <input className='login__input' type='password' />
+        <label className='login__label' htmlFor='email'>E-mail</label>
+        <input className='login__input' type='email' id='email' />
+        <span className='register__error'></span>
+        <label className='login__label' htmlFor='password'>Пароль</label>
+        <input className='login__input' type='password' id='password' />
+        <span className='register__error'></span>
         <button className='login__button' type='submit'>Зарегистрироваться</button>
       </form>
       <div className='login__bottom'>
