@@ -1,8 +1,8 @@
 .profile__container {
-  padding: 70px;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  margin: 64px auto 0;
+  width: 410px;
 }
 
 .profile__title {
@@ -17,7 +17,7 @@
 }
 
 .profile___form {
-  width: 410px;
+  width: 100%;
   font-size: 11px;
   line-height: 13px;
 }
@@ -67,4 +67,29 @@
   cursor: pointer;
   font-weight: 500;
   color: #EE3465;
+}
+
+@media screen and (max-width: 768px) {
+  .profile__container {
+    margin: 236px auto 0;
+    padding-bottom: 30px;
+  }
+
+  .profile__title {
+    margin-bottom: 96px;
+  }
+}
+
+@media screen and (max-width: 420px) {
+  .profile__container {
+    min-width: 260px;
+    width: calc(100% - 60px);
+    margin: 70px auto 0;
+    padding-bottom: 40px;
+  }
+
+  .profile___bottom {
+    margin-top: 379px;
+  }
+
 }
