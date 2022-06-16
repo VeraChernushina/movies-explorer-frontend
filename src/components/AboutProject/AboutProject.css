@@ -19,6 +19,7 @@
 .about__description-blocks {
   display: flex;
   justify-content: space-between;
+  column-gap: 30px;
 }
 
 .about__description-block {
@@ -105,7 +106,7 @@
   }
 }
 
-@media screen and (max-width: 320px) {
+@media screen and (max-width: 420px) {
   .about {
     padding: 70px 18px;
   }

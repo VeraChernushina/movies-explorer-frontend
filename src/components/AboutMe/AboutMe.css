@@ -17,6 +17,7 @@
 .about-me__content {
   display: flex;
   justify-content: space-between;
+  column-gap: 30px;
 }
 
 .about-me__info {
@@ -101,7 +102,7 @@
   }
 }
 
-@media screen and (max-width: 320px) {
+@media screen and (max-width: 480px) {
   .about-me {
     padding: 70px 14px;
   }
@@ -124,7 +125,8 @@
   .about-me__photo {
     width: 292px;
     height: 352px;
-    margin-bottom: 40px;
+    display: flex;
+    margin: 0 auto 40px;
   }
 
   .about-me__name {
