@@ -2,10 +2,10 @@ import './FilterCheckbox.css';
 
 const FilterCheckbox = () => {
   return (
-    <div>
+    <section className='filter'>
       <input type='checkbox' id='checkbox' className='filter__checkbox' />
-      <label className='filter__label'>Короткометражки</label>
-    </div>
+      <label htmlFor='checkbox' className='filter__label'>Короткометражки</label>
+    </section>
   )
 };
 

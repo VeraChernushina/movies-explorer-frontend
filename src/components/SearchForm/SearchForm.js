@@ -3,15 +3,18 @@ import FilterCheckbox from '../FilterCheckbox/FilterCheckbox';
 
 const SearchForm = () => {
   return (
-    <div className='search'>
-      <input
-        type='text'
-        placeholder='Фильм'
-        className='search__input'
-      />
-      <button className='search__button'>Поиск</button>
+    <section className='search'>
+      <form className='search__form'>
+        <input
+          type='text'
+          placeholder='Фильм'
+          className='search__input'
+        />
+        <button className='search__button'>Поиск</button>
+      </form>
+
       <FilterCheckbox />
-    </div>
+    </section>
   )
 };
 
