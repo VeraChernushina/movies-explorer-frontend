@@ -1,8 +1,11 @@
+import React from 'react';
 import './Profile.css';
+import Header from '../Header/Header';
 
 const Profile = () => {
   return (
     <div className='profile__container'>
+      <Header />
       <h1 className='profile__title'>Привет, Вера!</h1>
       <form className='profile___form'>
         <div className='profile__value'>

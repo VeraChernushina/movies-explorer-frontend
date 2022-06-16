@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Route, Switch } from "react-router-dom";
 
 import Main from "./Main";
@@ -9,7 +9,9 @@ import Register from "./Register/Register";
 import Login from "./Login/Login";
 import NotFoundPage from "./NotFoundPage/NotFoundPage";
 
-function App() {
+const App = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   return (
     <div className="App">
       <Switch>
