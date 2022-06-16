@@ -14,6 +14,8 @@ const SearchForm = () => {
       </form>
 
       <FilterCheckbox />
+
+      <div className='search__line' />
     </section>
   )
 };
