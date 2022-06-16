@@ -19,12 +19,15 @@ const Register = () => {
       </div>
 
       <form className='register__form'>
-        <label className='register__label'>Имя</label>
-        <input className='register__input' type='text' />
-        <label className='register__label'>E-mail</label>
-        <input className='register__input' type='email' />
-        <label className='register__label'>Пароль</label>
-        <input className='register__input' type='password' />
+        <label className='register__label' htmlFor='name'>Имя</label>
+        <input className='register__input' type='text' id='name' />
+        <span className='register__error'></span>
+        <label className='register__label' htmlFor='email'>E-mail</label>
+        <input className='register__input' type='email' id='email' />
+        <span className='register__error'></span>
+        <label className='register__label' htmlFor='password'>Пароль</label>
+        <input className='register__input' type='password' id='password' />
+        <span className='register__error'></span>
         <button className='register__button' type='submit'>Зарегистрироваться</button>
       </form>
       <div className='register__bottom'>
