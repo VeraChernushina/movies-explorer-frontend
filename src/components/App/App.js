@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import { Route, Switch } from "react-router-dom";
 
-import Main from "./Main";
-import Movies from "./Movies/Movies";
-import SavedMovies from "./SavedMovies/SavedMovies";
-import Profile from "./Profile/Profile";
-import Register from "./Register/Register";
-import Login from "./Login/Login";
-import NotFoundPage from "./NotFoundPage/NotFoundPage";
+import './App.css';
+
+import Main from "../Main";
+import Movies from "../Movies/Movies";
+import SavedMovies from "../SavedMovies/SavedMovies";
+import Profile from "../Profile/Profile";
+import Register from "../Register/Register";
+import Login from "../Login/Login";
+import NotFoundPage from "../NotFoundPage/NotFoundPage";
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);

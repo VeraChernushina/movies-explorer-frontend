@@ -29,7 +29,6 @@ const Login = () => {
         <span>Ещё не зарегистрированы?</span>
         <Link to='signup' className='login__link'>Регистрация</Link>
       </div>
-
     </div>
   )
 };
