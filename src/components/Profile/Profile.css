@@ -43,6 +43,8 @@
   border: none;
   text-align: right;
   font-weight: 400;
+  width: 80%;
+  outline: none;
 }
 
 .profile__bottom {

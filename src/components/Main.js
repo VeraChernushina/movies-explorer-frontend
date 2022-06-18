@@ -5,10 +5,10 @@ import AboutMe from "./AboutMe/AboutMe";
 import Portfolio from "./Portfolio/Portfolio";
 import Footer from "./Footer/Footer";
 
-const Main = () => {
+const Main = ({ loggedIn }) => {
   return (
     <>
-      <Promo />
+      <Promo loggedIn={loggedIn} />
       <AboutProject />
       <Techs />
       <AboutMe />

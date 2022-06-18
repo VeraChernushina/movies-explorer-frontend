@@ -17,12 +17,8 @@
 }
 
 
-@media screen and (max-width: 320px) {
+@media screen and (max-width: 420px) {
   .header {
     padding: 18px 14px;
-  }
-
-  .header__link {
-    margin-right: 14px;
   }
 }

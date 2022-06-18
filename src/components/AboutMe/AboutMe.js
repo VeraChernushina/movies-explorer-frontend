@@ -15,8 +15,8 @@ const AboutMe = () => {
             Я работаю в стартапе удаленно, что позволяет мне больше времени проводить с моей собакой. 
             В свободное время я смотрю ситкомы, занимаюсь йогой и гуляю по моему прекрасному городу.
           </span>
-          <a className='about-me__link' href='https://www.facebook.com/v.chernushina/' target='_blank'>Facebook</a>
-          <a className='about-me__link' href='https://github.com/VeraChernushina' target='_blank'>Github</a>
+          <a className='about-me__link' href='https://www.facebook.com/v.chernushina/' target='_blank' rel='noreferrer'>Facebook</a>
+          <a className='about-me__link' href='https://github.com/VeraChernushina' target='_blank' rel='noreferrer'>Github</a>
         </div>
         <img
           className='about-me__photo'

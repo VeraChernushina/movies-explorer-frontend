@@ -36,6 +36,11 @@
 .portfolio__link {
   color: #000000;
   text-decoration: none;
+  transition: 0.3s ease;
+}
+
+.portfolio__link:hover {
+  opacity: 0.7;
 }
 
 .portfolio__projects li:last-of-type {

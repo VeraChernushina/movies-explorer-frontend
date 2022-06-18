@@ -1,9 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import useForm from '../../hooks/useForm';
 import './Login.css';
 import logo from '../../images/header-logo.svg';
 
 const Login = () => {
+  const { enteredValues, errors, handleChange } = useForm();
+
   return (
     <div className='login__container'>
       <div className='login__header'>
@@ -20,11 +23,27 @@ const Login = () => {
 
       <form className='login__form'>
         <label className='login__label' htmlFor='email'>E-mail</label>
-        <input className='login__input' type='email' id='email' />
-        <span className='register__error'></span>
+        <input
+          className='login__input'
+          type='email'
+          id='email'
+          name='email'
+          required
+          value={enteredValues.email || ''}
+          onChange={handleChange}
+        />
+        <span className='register__error'>{errors.email}</span>
         <label className='login__label' htmlFor='password'>Пароль</label>
-        <input className='login__input' type='password' id='password' />
-        <span className='register__error'></span>
+        <input
+          className='login__input'
+          type='password'
+          id='password'
+          name='password'
+          required
+          value={enteredValues.password || ''}
+          onChange={handleChange}
+        />
+        <span className='register__error'>{errors.password}</span>
         <button className='login__button' type='submit'>Зарегистрироваться</button>
       </form>
       <div className='login__bottom'>

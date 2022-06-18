@@ -1,20 +1,23 @@
 import './MoviesCard.css';
-import film from '../../images/film.png';
 
-const MoviesCard = () => {
+const MoviesCard = ({ isSavedMoviesPage, movie }) => {
   return (
     <div className='card'>
       <img
-        src={film}
-        alt='Фильм'
+        src={movie.image}
+        alt={`Обложка фильма: ${movie.name}`}
         className='card__image'
       />
       <div className='card__description'>
-        <span className='card__name'>33 слова о дизайне</span>
-        <span className='card__duration'>1ч 17м</span>
+        <span className='card__name'>{movie.name}</span>
+        <span className='card__duration'>{movie.duration}</span>
       </div>
-      <button className='card__button'>Сохранить</button>
-      <button className='card__button_saved' />
+      {movie.saved && !isSavedMoviesPage && <button className='card__button_saved' />}
+      {isSavedMoviesPage ? (
+        <button className='card__button_delete' />
+      ) : (
+        <button className='card__button'>Сохранить</button>
+      )}
     </div>
   )
 };

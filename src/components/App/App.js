@@ -12,22 +12,22 @@ import Login from "../Login/Login";
 import NotFoundPage from "../NotFoundPage/NotFoundPage";
 
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   return (
     <div className="App">
       <Switch>
         <Route exact path='/'>
-          <Main />
+          <Main loggedIn={isLoggedIn} />
         </Route>
         <Route exact path='/movies'>
-          <Movies />
+          <Movies loggedIn={isLoggedIn} />
         </Route>
         <Route exact path='/saved-movies'>
-          <SavedMovies />
+          <SavedMovies loggedIn={isLoggedIn} />
         </Route>
         <Route exact path='/profile'>
-          <Profile />
+          <Profile loggedIn={isLoggedIn} />
         </Route>
         <Route exact path='/signup'>
           <Register />

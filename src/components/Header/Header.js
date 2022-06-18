@@ -4,7 +4,7 @@ import Navigation from '../Navigation/Navigation';
 import './Header.css';
 import logo from '../../images/header-logo.svg';
 
-const Header = () => {
+const Header = ({ loggedIn }) => {
   return (
     <header className='header'>
       <Link to='/'>
@@ -14,7 +14,7 @@ const Header = () => {
           className='header__logo'
         />
       </Link>
-      <Navigation />
+      <Navigation loggedIn={loggedIn} />
     </header>
   )
 };

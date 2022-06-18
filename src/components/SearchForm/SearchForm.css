@@ -34,4 +34,26 @@
   color: #FFFFFF;
   padding: 17px 20px;
   cursor: pointer;
+  transition: .3s ease;
 }
+
+.search__button:hover {
+  opacity: 0.8;
+}
+
+@media screen and (max-width: 768px) {
+  .search {
+    padding: 70px 30px 0;
+  }
+}
+
+@media screen and (max-width: 420px) {
+  .search {
+    padding: 70px 14px 0;
+  }
+
+  .search__form {
+    margin-bottom: 30px;
+  }
+}
+

@@ -1,15 +1,27 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useRouteMatch } from 'react-router-dom';
 import './Navigation.css';
+import BurgerMenu from '../BurgerMenu/BurgerMenu';
 
-const Navigation = ({ isLoggedIn=false }) => {
+const Navigation = ({ loggedIn }) => {
+  const [isBurgerMenuOpen, setIsBurgerMenuOpen] = useState(false);
+  const routeMatch = useRouteMatch();
+
+  const toggleBurgerMenu = () => {
+    setIsBurgerMenuOpen(!isBurgerMenuOpen);
+  }
+
   return (
     <nav className='navigation'>
-      {isLoggedIn ? (
+      {loggedIn ? (
         <>
           <div className='navigation__movies'>
-            <Link to='/movies' className='navigation__movies-link'>Фильмы</Link>
-            <Link to='/saved-movies' className='navigation__movies-link_saved'>Сохранённые фильмы</Link>
+            <Link to='/movies' className={routeMatch.path === '/movies' ? 'navigation__movies-link_active' : 'navigation__movies-link'}>
+              Фильмы
+            </Link>
+            <Link to='/saved-movies' className={routeMatch.path === '/saved-movies' ? 'navigation__movies-link_active' : 'navigation__movies-link'}>
+              Сохранённые фильмы
+            </Link>
           </div>
           <div>
             <Link to='/profile'>
@@ -29,6 +41,10 @@ const Navigation = ({ isLoggedIn=false }) => {
           </Link>
         </div>
       )}
+      {!isBurgerMenuOpen && loggedIn ? (
+        <button className='burger__button' onClick={toggleBurgerMenu} />
+      ) : <BurgerMenu onClose={toggleBurgerMenu} />
+      }
     </nav>
   )
 };

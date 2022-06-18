@@ -1,19 +1,20 @@
+import React from 'react';
 import './MoviesCardList.css';
 import MoviesCard from '../MoviesCard/MoviesCard';
+import Preloader from '../Preloader/Preloader';
 
-const MoviesCardList = () => {
+const MoviesCardList = ({ isLoading=false, isSavedMoviesPage, movies }) => {
   return (
-    <div className='cards'>
-      <div className='cards__list'>
-        <MoviesCard />
-        <MoviesCard />
-        <MoviesCard />
-        <MoviesCard />
-        <MoviesCard />
-        <MoviesCard />
-      </div>
-      <button className='cards__button'>Ещё</button>
-    </div>
+    <section className='cards'>
+      {isLoading ? <Preloader /> : (
+      <ul className='cards__list'>
+        {movies.map((movie) => {
+          return <MoviesCard key={movie.id} movie={movie} isSavedMoviesPage={isSavedMoviesPage} />
+        })}
+      </ul>
+      )}
+      <button className={!isSavedMoviesPage ? 'cards__button' : 'cards__button_hidden'}>Ещё</button>
+    </section>
   )
 };
 
