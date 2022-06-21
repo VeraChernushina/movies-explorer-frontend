@@ -18,6 +18,10 @@
   margin-bottom: 26px;
 }
 
+.search__form:focus-within {
+  border-color: #2BE080; 
+}
+
 .search__input {
   border: none;
   outline: none;

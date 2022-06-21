@@ -15,11 +15,15 @@ const Navigation = ({ loggedIn }) => {
     <nav className='navigation'>
       {loggedIn ? (
         <>
-          <div className='navigation__movies'>
-            <Link to='/movies' className={routeMatch.path === '/movies' ? 'navigation__movies-link_active' : 'navigation__movies-link'}>
+          <div className={routeMatch.path === '/' ? 'navigation__movies navigation__movies_white' : 'navigation__movies'}>
+            <Link
+              to='/movies'
+              className={routeMatch.path === '/movies' ? 'navigation__movies-link_active' : 'navigation__movies-link'}>
               Фильмы
             </Link>
-            <Link to='/saved-movies' className={routeMatch.path === '/saved-movies' ? 'navigation__movies-link_active' : 'navigation__movies-link'}>
+            <Link
+              to='/saved-movies'
+              className={routeMatch.path === '/saved-movies' ? 'navigation__movies-link_active' : 'navigation__movies-link'}>
               Сохранённые фильмы
             </Link>
           </div>
@@ -42,7 +46,10 @@ const Navigation = ({ loggedIn }) => {
         </div>
       )}
       {!isBurgerMenuOpen && loggedIn ? (
-        <button className='burger__button' onClick={toggleBurgerMenu} />
+        <button
+          className={routeMatch.path === '/' ? 'burger__button burger__button_white' :'burger__button'}
+          onClick={toggleBurgerMenu}
+        />
       ) : <BurgerMenu onClose={toggleBurgerMenu} />
       }
     </nav>

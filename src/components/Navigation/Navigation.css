@@ -20,10 +20,17 @@
   line-height: 18px;
 }
 
+.navigation__movies a {
+  color: #000000;
+}
+
+.navigation__movies_white a {
+  color: #FFFFFF;
+}
+
 .navigation__movies-link {
   font-weight: 400;
   text-decoration: none;
-  color: #000000;
   margin-right: 16px;
 }
 
@@ -34,7 +41,6 @@
 .navigation__movies-link_active {
   font-weight: 500;
   text-decoration: none;
-  color: #000000;
   margin-right: 16px;
 }
 
@@ -96,6 +102,10 @@
   cursor: pointer;
   transition: 0.3s ease;
   display: none;
+}
+
+.burger__button_white {
+  background-image: url('../../images/burger-menu-white.svg');
 }
 
 @media screen and (max-width: 768px) {
