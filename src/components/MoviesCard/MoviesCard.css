@@ -3,6 +3,10 @@
   position: relative;
 }
 
+.card__link {
+  text-decoration: none;
+}
+
 .card__image {
   width: 360px;
   height: 201px;
@@ -79,6 +83,10 @@
   cursor: pointer;
   display: block;
   visibility: hidden;
+}
+
+.card__button_hidden {
+  display: none;
 }
 
 .card:hover .card__button_delete {

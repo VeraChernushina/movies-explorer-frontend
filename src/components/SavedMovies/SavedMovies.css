@@ -1,0 +1,10 @@
+.savedMovies__content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.savedMovies__message {
+  text-align: center;
+  padding: 20px 0;
+}

@@ -4,8 +4,13 @@ import useForm from '../../hooks/useForm';
 import './Register.css';
 import logo from '../../images/header-logo.svg';
 
-const Register = () => {
-  const { enteredValues, errors, handleChange } = useForm();
+const Register = ({ onRegister }) => {
+  const { enteredValues, errors, handleChange, isFormValid } = useForm();
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    onRegister(enteredValues);
+  };
 
   return (
     <section className='register__container'>
@@ -21,7 +26,7 @@ const Register = () => {
         <h1 className='register__title'>Добро пожаловать!</h1>
       </div>
 
-      <form className='register__form'>
+      <form className='register__form form' onSubmit={handleSubmit}>
         <label className='register__label' htmlFor='name'>Имя</label>
         <input
           className='register__input'
@@ -57,7 +62,7 @@ const Register = () => {
           onChange={handleChange}
         />
         <span className='register__error'>{errors.password}</span>
-        <button className='register__button' type='submit'>Зарегистрироваться</button>
+        <button className='register__button' type='submit' disabled={!isFormValid}>Зарегистрироваться</button>
       </form>
       <div className='register__bottom'>
         <span>Уже зарегистрированы?</span>

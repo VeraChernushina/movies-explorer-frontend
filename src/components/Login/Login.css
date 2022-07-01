@@ -75,6 +75,12 @@
   padding: 13px 0 15px;
   margin-top: 179px;
   margin-bottom: 16px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.login__button:hover {
+  opacity: 0.8;
 }
 
 .login__bottom {
