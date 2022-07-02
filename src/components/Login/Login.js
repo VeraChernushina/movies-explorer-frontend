@@ -4,8 +4,16 @@ import useForm from '../../hooks/useForm';
 import './Login.css';
 import logo from '../../images/header-logo.svg';
 
-const Login = () => {
-  const { enteredValues, errors, handleChange } = useForm();
+const Login = ({ onLogin }) => {
+  const { enteredValues, errors, handleChange, isFormValid } = useForm();
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (!enteredValues.email || !enteredValues.password) {
+      return;
+    }
+    onLogin(enteredValues);
+  };
 
   return (
     <div className='login__container'>
@@ -21,7 +29,7 @@ const Login = () => {
         <h1 className='login__title'>Рады видеть!</h1>
       </div>
 
-      <form className='login__form'>
+      <form className='login__form form' onSubmit={handleSubmit}>
         <label className='login__label' htmlFor='email'>E-mail</label>
         <input
           className='login__input'
@@ -44,7 +52,7 @@ const Login = () => {
           onChange={handleChange}
         />
         <span className='register__error'>{errors.password}</span>
-        <button className='login__button' type='submit'>Зарегистрироваться</button>
+        <button className='login__button' type='submit' disabled={!isFormValid}>Войти</button>
       </form>
       <div className='login__bottom'>
         <span>Ещё не зарегистрированы?</span>
