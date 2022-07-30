@@ -49,16 +49,12 @@ const App = () => {
   /* --------------------- Movie cards' functions --------------------- */
 
   const handleSaveMovie = (movie) => {
-    const jwt = localStorage.getItem('jwt');
-    if (!jwt) {
-      return;
-    }
     const film = savedMovies.find(item => item.movieId === movie.id);
     const isSaved = Boolean(film);
     const id = film ? film._id : null;
     if (isSaved) {
       setIsLoading(true);
-      deleteMovie(id, jwt)
+      deleteMovie(id)
         .then((card) => {
           const updatedSavedMovies = savedMovies.filter(item => card._id !== item.id);
           localStorage.setItem('savedMovies', updatedSavedMovies);
@@ -72,7 +68,7 @@ const App = () => {
         })
       return;
     };
-    saveMovie(movie, jwt)
+    saveMovie(movie)
       .then((savedMovie) => {
         setSavedMovies(prevState => [...prevState, savedMovie]);
       })
@@ -82,12 +78,8 @@ const App = () => {
   };
 
   const handleDeleteMovie = (movie) => {
-    const jwt = localStorage.getItem('jwt');
-    if (!jwt) {
-      return;
-    }
     setIsLoading(true);
-    deleteMovie(movie._id, jwt)
+    deleteMovie(movie._id)
       .then((card) => {
         const updatedSavedMovies = savedMovies.filter(item => card._id !== item._id);
         localStorage.setItem('savedMovies', updatedSavedMovies);
@@ -167,12 +159,8 @@ const App = () => {
   /*--------------------- Authorization and Log out ---------------------- */
 
   const handleTokenCheck = () => {
-    const jwt = localStorage.getItem('jwt');
-    if (!jwt) {
-      localStorage.removeItem('jwt');
-    }
     setIsLoading(true);
-    Promise.all([getContent(jwt), getSavedMovies(jwt)])
+    Promise.all([getContent(), getSavedMovies()])
       .then(([userInfo, userMovies]) => {
         setCurrentUser(userInfo);
         localStorage.setItem('savedMovies', userMovies)
@@ -201,7 +189,6 @@ const App = () => {
   const handleAuthorization = (data) => {
     return authorize(data)
       .then((data) => {
-        localStorage.setItem('jwt', data.token);
         handleTokenCheck();
         setIsLoggedIn(true);
         history.push('/movies');
@@ -216,8 +203,7 @@ const App = () => {
 
   const handleUpdateUser = (newUserInfo) => {
     setIsLoading(true);
-    const jwt = localStorage.getItem('jwt');
-    updateUserInfo(jwt, newUserInfo)
+    updateUserInfo(newUserInfo)
       .then((data) => {
         setCurrentUser(data);
         setPopupMessage('Профиль успешно редактирован!');
@@ -235,7 +221,6 @@ const App = () => {
   // log out function
 
   const handleSignOut = () => {
-    localStorage.removeItem('jwt');
     localStorage.clear();
     history.push('/');
     setIsLoggedIn(false);
