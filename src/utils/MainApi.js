@@ -17,7 +17,7 @@ export const register = ({ name, email, password }) => {
     method: 'POST',
     credentials: 'include',
     headers,
-    body: JSON.stringify({ 
+    body: JSON.stringify({
       name,
       email,
       password
@@ -34,48 +34,39 @@ export const authorize = ({ email, password }) => {
   }).then((res) => checkResponse(res));
 };
 
-export const getContent = (jwt) => {
+export const getContent = () => {
   return fetch(`${BASE_API_URL}/users/me`, {
     method: 'GET',
     credentials: 'include',
-    headers: {
-      ...headers,
-      authorization: `Bearer ${jwt}`,
-    },
+    headers,
   }).then((res) => checkResponse(res));
 };
 
-export const updateUserInfo = (jwt, data) => {
+export const updateUserInfo = (data) => {
   return fetch(`${BASE_API_URL}/users/me`, {
     method: 'PATCH',
-    headers: {
-      ...headers,
-      'Authorization': `Bearer ${jwt}`,
-    },
+    headers,
+    credentials: 'include',
     body: JSON.stringify({
-      name: data.name, 
+      name: data.name,
       email: data.email,
     }),
   }).then((res) => checkResponse(res));
 };
 
-export const getSavedMovies = (jwt) => {
+export const getSavedMovies = () => {
   return fetch(`${BASE_API_URL}/movies`, {
     method: 'GET',
-    headers: {
-      ...headers,
-      'Authorization': `Bearer ${jwt}`,
-    },
+    headers,
+    credentials: 'include',
   }).then((res) => checkResponse(res));
 };
 
-export const saveMovie = (movie, jwt) => {
+export const saveMovie = (movie) => {
   return fetch(`${BASE_API_URL}/movies`, {
     method: 'POST',
-    headers: {
-      ...headers,
-      'Authorization': `Bearer ${jwt}`,
-    },
+    headers,
+    credentials: 'include',
     body: JSON.stringify({
       country: movie.country,
       director: movie.director,
@@ -92,12 +83,10 @@ export const saveMovie = (movie, jwt) => {
   }).then((res) => checkResponse(res));
 };
 
-export const deleteMovie = (id, jwt) => {
+export const deleteMovie = (id) => {
   return fetch(`${BASE_API_URL}/movies/${id}`, {
     method: 'DELETE',
-    headers: {
-      ...headers,
-      'Authorization': `Bearer ${jwt}`,
-    },
+    headers,
+    credentials: 'include',
   }).then((res) => checkResponse(res));
 };
