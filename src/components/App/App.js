@@ -46,6 +46,25 @@ const App = () => {
     handleTokenCheck()
   }, [history])
 
+  useEffect(() => {
+    if (isLoggedIn) {
+      setIsLoading(true);
+      Promise.all([getContent(), getSavedMovies()])
+        .then(([userInfo, userMovies]) => {
+          setCurrentUser(userInfo);
+          localStorage.setItem('savedMovies', userMovies)
+          setSavedMovies(userMovies);
+          setIsLoggedIn(true);
+        })
+        .catch(error => {
+          console.log(error);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        })
+    }
+  }, [isLoggedIn])
+
   /* --------------------- Movie cards' functions --------------------- */
 
   const handleSaveMovie = (movie) => {
@@ -102,11 +121,11 @@ const App = () => {
       return;
     }
     setIsLoading(true);
-    if (movies.length === 0) {
+    if (!movies || movies.length === 0) {
       moviesApi.getMovies()
         .then((data) => {
           setMovies(data);
-          const filteredMovies = search(movies, isMovieFilter, searchRequest);
+          const filteredMovies = search(data, isMovieFilter, searchRequest);
           localStorage.setItem('searchRequest', searchRequest);
           localStorage.setItem('searchedMovies', JSON.stringify(filteredMovies));
           localStorage.setItem('filter', isMovieFilter);
@@ -254,7 +273,6 @@ const App = () => {
             component={SavedMovies}
             movies={savedMovies}
             loggedIn={isLoggedIn}
-            onSearchMovies={searchSavedMovies}
             isLoading={isLoading}
             onDelete={handleDeleteMovie}
           />
