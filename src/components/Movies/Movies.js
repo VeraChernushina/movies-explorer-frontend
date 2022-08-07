@@ -7,6 +7,8 @@ import Preloader from '../Preloader/Preloader';
 
 import './Movies.css';
 
+import { search, filter } from '../../utils/utils';
+
 const Movies = ({
   loggedIn,
   onSearchMovies,
@@ -55,6 +57,12 @@ const Movies = ({
   };
 
   useEffect(() => {
+    const isFilter = localStorage.getItem('filter');
+    console.log(isFilter)
+    setIsMovieFilter(isFilter);
+  }, [])
+
+  useEffect(() => {
     setRenderedMovies(movies.slice(0, renderedCardsNumber));
     if (movies.length <= renderedCardsNumber) {
       setIsMoreButton(false);
@@ -82,6 +90,28 @@ const Movies = ({
     }
   }, [movies])
 
+  const toggleShortMoviesFilter = () => {
+    setIsMovieFilter(isMovieFilter);
+    const movies = JSON.parse(localStorage.getItem('movies'));
+    if (!movies) {
+      return null
+    } else if (!isMovieFilter) {
+      let renderedShortMovies = filter(renderedMovies);
+      if (renderedShortMovies === null) {
+        renderedShortMovies = [];
+      }
+      localStorage.setItem('filter', isMovieFilter);
+      localStorage.setItem('searchedMovies', renderedShortMovies);
+      setRenderedMovies(renderedShortMovies);
+    } else {
+      const searchRequest = localStorage.getItem('searchRequest');
+      const showedMovies = search(movies, !isMovieFilter, searchRequest);
+      localStorage.setItem('filter', isMovieFilter);
+      localStorage.setItem('searchedMovies', showedMovies);
+      setRenderedMovies(showedMovies);
+    }
+  }
+
   return (
     <section className='movies__page'>
       <Header loggedIn={loggedIn} />
@@ -89,7 +119,7 @@ const Movies = ({
         <SearchForm
           isMovieFilter={isMovieFilter}
           onSearchMovies={onSearchMovies}
-          onFilter={setIsMovieFilter}
+          onFilter={toggleShortMoviesFilter}
         />
         {isLoading && (
           <Preloader />
