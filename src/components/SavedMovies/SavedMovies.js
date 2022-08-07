@@ -66,7 +66,7 @@ const SavedMovies = ({
         {isLoading && (
           <Preloader />
         )}
-        {errorMessage && (
+        {(errorMessage && !isLoading) && (
           <p className='savedMovies__message'>{errorMessage}</p>
         )}
         {(!isLoading && !errorMessage) && (

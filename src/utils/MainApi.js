@@ -77,8 +77,8 @@ export const saveMovie = (movie) => {
       trailerLink: movie.trailerLink,
       thumbnail: 'https://api.nomoreparties.co/' + movie.image.formats.thumbnail.url,
       movieId: movie.id,
-      nameRU: movie.nameRU,
-      nameEN: movie.nameEN,
+      nameRU: movie.nameRU || movie.nameEN,
+      nameEN: movie.nameEN || movie.nameRU,
     }),
   }).then((res) => checkResponse(res));
 };
@@ -90,3 +90,13 @@ export const deleteMovie = (id) => {
     credentials: 'include',
   }).then((res) => checkResponse(res));
 };
+
+export const logOut = () => {
+  return fetch(`${BASE_API_URL}/signout`, {
+    method: 'POST',
+    headers,
+    credentials: 'include',
+  }).then((res) => {
+      return checkResponse(res);
+    });
+}

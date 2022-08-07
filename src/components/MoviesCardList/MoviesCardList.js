@@ -12,9 +12,9 @@ const MoviesCardList = ({
   return (
     <section className='cards'>
       <ul className='cards__list'>
-        {movies.map(movie => {
+        {movies.sort().map(movie => {
           return <MoviesCard
-            key={movie.id || movie.movieId}
+            key={isSavedMoviesPage ? movie.movieId : movie.id}
             movie={movie}
             isSavedMoviesPage={isSavedMoviesPage}
             onSave={onSave}

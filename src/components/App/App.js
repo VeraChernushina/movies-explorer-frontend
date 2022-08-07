@@ -24,6 +24,7 @@ import {
   saveMovie,
   deleteMovie,
   getSavedMovies,
+  logOut
 } from "../../utils/MainApi";
 
 import { search } from "../../utils/utils";
@@ -42,9 +43,62 @@ const App = () => {
 
   const history = useHistory();
 
+  /*--------------------- Authorization ---------------------- */
+
+  const handleTokenCheck = () => {
+    setIsLoading(true);
+    getContent()
+      .then((data) => {
+        if (data.name) {
+          setCurrentUser(data);
+          setIsLoggedIn(true);
+        }
+      })
+      .catch((error) => {
+        console.log(error)
+        setIsLoggedIn(false)
+      })
+  };
+
+  const handleRegistration = (data) => {
+    return register(data)
+      .then(() => {
+        history.push('/signin');
+      })
+      .catch(error => {
+        setPopupMessage('При регистрации пользователя произошла ошибка.');
+        setIsPopupOpen(true);
+      });
+  };
+
+  const handleAuthorization = (data) => {
+    return authorize(data)
+      .then(() => {
+        setIsLoading(true);
+        Promise.all([getContent(), getSavedMovies()])
+          .then(([userInfo, userMovies]) => {
+            setCurrentUser(userInfo);
+            localStorage.setItem('savedMovies', JSON.stringify(userMovies))
+            setSavedMovies(userMovies);
+            setIsLoggedIn(true);
+          })
+          .catch(error => {
+            console.log(error);
+          })
+          .finally(() => {
+            setIsLoading(false);
+          })
+        history.push('/movies');
+      })
+      .catch(error => {
+        setPopupMessage(error);
+        setIsPopupOpen(true);
+      });
+  };
+
   useEffect(() => {
     handleTokenCheck()
-  }, [history])
+  }, [])
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -52,12 +106,11 @@ const App = () => {
       Promise.all([getContent(), getSavedMovies()])
         .then(([userInfo, userMovies]) => {
           setCurrentUser(userInfo);
-          localStorage.setItem('savedMovies', userMovies)
           setSavedMovies(userMovies);
-          setIsLoggedIn(true);
         })
-        .catch(error => {
-          console.log(error);
+        .catch((error) => {
+          setPopupMessage(error);
+          setIsPopupOpen(true);
         })
         .finally(() => {
           setIsLoading(false);
@@ -68,33 +121,34 @@ const App = () => {
   /* --------------------- Movie cards' functions --------------------- */
 
   const handleSaveMovie = (movie) => {
-    const film = savedMovies.find(item => item.movieId === movie.id);
-    const isSaved = Boolean(film);
-    const id = film ? film._id : null;
-    if (isSaved) {
-      setIsLoading(true);
+    const handledMovie = savedMovies.find(item => {
+      return item.movieId === movie.id
+    });
+    const isLiked = Boolean(handledMovie);
+    const id = handledMovie ? handledMovie._id : null;
+    if (isLiked) {
       deleteMovie(id)
         .then((card) => {
-          const updatedSavedMovies = savedMovies.filter(item => card._id !== item.id);
+          const updatedSavedMovies = savedMovies.filter(item => card._id !== item._id);
           localStorage.setItem('savedMovies', updatedSavedMovies);
-          setSavedMovies(updatedSavedMovies);
+          setSavedMovies(prev => updatedSavedMovies);
         })
         .catch(error => {
-          console.log(error)
+          console.log(error);
         })
         .finally(() => {
           setIsLoading(false);
+        });
+    } else {
+      saveMovie(movie)
+        .then((newSavedMovie) => {
+          setSavedMovies((prev) => [...prev, newSavedMovie]);
         })
-      return;
-    };
-    saveMovie(movie)
-      .then((savedMovie) => {
-        setSavedMovies(prevState => [...prevState, savedMovie]);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  };
+        .catch((error) => {
+          console.log(error)
+        })
+    }
+  }
 
   const handleDeleteMovie = (movie) => {
     setIsLoading(true);
@@ -102,7 +156,7 @@ const App = () => {
       .then((card) => {
         const updatedSavedMovies = savedMovies.filter(item => card._id !== item._id);
         localStorage.setItem('savedMovies', updatedSavedMovies);
-        setSavedMovies(updatedSavedMovies);
+        setSavedMovies(prev => updatedSavedMovies);
       })
       .catch(error => {
         console.log(error);
@@ -148,74 +202,11 @@ const App = () => {
     }
   }
 
-  // search saved movies by request
-
-  const searchSavedMovies = (searchRequest, isMovieFilter) => {
-    if (searchRequest.trim() === '') {
-      setPopupMessage('Нужно ввести ключевое слово');
-      setIsPopupOpen(true);
-      return;
-    }
-    setIsLoading(true);
-    try {
-      const filteredMovies = search(savedMovies, isMovieFilter, searchRequest);
-      localStorage.setItem('searchedSavedMovies', filteredMovies);
-    } catch (error) {
-      setPopupMessage(error);
-      setIsPopupOpen(true);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   /*--------------- Popup function ------------ */
 
   const handleClosePopup = () => {
     setIsPopupOpen(false);
     setPopupMessage(null);
-  };
-
-  /*--------------------- Authorization and Log out ---------------------- */
-
-  const handleTokenCheck = () => {
-    setIsLoading(true);
-    Promise.all([getContent(), getSavedMovies()])
-      .then(([userInfo, userMovies]) => {
-        setCurrentUser(userInfo);
-        localStorage.setItem('savedMovies', userMovies)
-        setSavedMovies(userMovies);
-        setIsLoggedIn(true);
-      })
-      .catch(error => {
-        console.log(error);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      })
-  };
-
-  const handleRegistration = (data) => {
-    return register(data)
-      .then(() => {
-        history.push('/signin');
-      })
-      .catch(error => {
-        setPopupMessage('При регистрации пользователя произошла ошибка.');
-        setIsPopupOpen(true);
-      });
-  };
-
-  const handleAuthorization = (data) => {
-    return authorize(data)
-      .then((data) => {
-        handleTokenCheck();
-        setIsLoggedIn(true);
-        history.push('/movies');
-      })
-      .catch(error => {
-        setPopupMessage(error);
-        setIsPopupOpen(true);
-      });
   };
 
   /* Update user's email and name */
@@ -240,14 +231,20 @@ const App = () => {
   // log out function
 
   const handleSignOut = () => {
-    localStorage.clear();
-    history.push('/');
-    setIsLoggedIn(false);
-    setCurrentUser(null);
-    setPopupMessage(null);
-    setMovies(null);
-    setSavedMovies(null);
-    setSearchedMovies(null);
+    return logOut().then(() => {
+      localStorage.clear();
+      setCurrentUser(null);
+      setPopupMessage(null);
+      setMovies(null);
+      setSavedMovies(null);
+      setSearchedMovies(null);
+      setIsLoggedIn(false);
+      history.push('/');
+    })
+      .catch(error => {
+        setPopupMessage(error.message);
+        setIsPopupOpen(true);
+      })
   };
 
   return (

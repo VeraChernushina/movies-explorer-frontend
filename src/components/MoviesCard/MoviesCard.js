@@ -7,7 +7,7 @@ const MoviesCard = ({
   movie,
   savedMovies,
   onSave,
-  onDelete
+  onDelete,
 }) => {
   const [isSaved, setIsSaved] = useState(false);
 
