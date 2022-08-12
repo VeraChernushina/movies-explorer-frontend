@@ -1,46 +1,77 @@
-import React, { useState, useEffect } from 'react';
 import './SearchForm.css';
 import FilterCheckbox from '../FilterCheckbox/FilterCheckbox';
+import useForm from '../../hooks/useForm';
 
 const SearchForm = ({
   isMovieFilter,
   onSearchMovies,
-  onFilter
+  onFilter,
+  disabled,
+  isSavedMoviesPage
 }) => {
-  const [movieRequest, setMovieRequest] = useState('');
+  const { enteredValues, handleChange, resetForm, isFormValid } = useForm();
 
-  const handleFormSubmit = (event) => {
-    event.preventDefault();
-    onSearchMovies(movieRequest, isMovieFilter);
-  };
+  function handleFormSubmit(e) {
+    e.preventDefault();
+    onSearchMovies(enteredValues.searchRequest, isFormValid, isMovieFilter);
+  }
 
-  useEffect(() => {
-    const request = localStorage.getItem('searchRequest');
-    if (request) {
-      setMovieRequest(request)
-    }
-  }, [isMovieFilter, onSearchMovies]);
+  function handleSavedMoviesFormSubmit(e) {
+    e.preventDefault()
+    onSearchMovies(enteredValues.searchRequest, isMovieFilter, resetForm);
+  }
 
   return (
     <section className='search'>
-      <form className='search__form' onSubmit={handleFormSubmit} noValidate>
-        <input
-          type='text'
-          placeholder='Фильм'
-          className='search__input'
-          required
-          value={movieRequest}
-          onChange={e => setMovieRequest(e.target.value)}
-        />
-        <button
-          type='submit'
-          className='search__button'
-        >
-          Поиск
-        </button>
-      </form>
+      {isSavedMoviesPage ? (
+        <>
+          <form className='search__form form' name='search-saved-movie-form' onSubmit={handleSavedMoviesFormSubmit} noValidate>
+            <input
+              type='text'
+              placeholder='Фильм'
+              className='search__input'
+              required
+              name='searchRequest'
+              disabled={disabled}
+              value={enteredValues.searchRequest || ''}
+              onChange={handleChange}
+            />
+            <button
+              type='submit'
+              className='search__button'
+              disabled={disabled}
+            >
+              Поиск
+            </button>
+          </form>
 
-      <FilterCheckbox isMovieFilter={isMovieFilter} onFilter={onFilter} />
+          <FilterCheckbox isMovieFilter={isMovieFilter} onFilter={onFilter} disabled={disabled} />
+        </>
+      ) : (
+        <>
+          <form className='search__form form' name='search-movie-form' onSubmit={handleFormSubmit} noValidate>
+            <input
+              type='text'
+              placeholder='Фильм'
+              className='search__input'
+              required
+              name='searchRequest'
+              disabled={disabled}
+              value={enteredValues.searchRequest || ''}
+              onChange={handleChange}
+            />
+            <button
+              type='submit'
+              className='search__button'
+              disabled={disabled}
+            >
+              Поиск
+            </button>
+          </form>
+
+          <FilterCheckbox isMovieFilter={isMovieFilter} onFilter={onFilter} disabled={disabled} />
+        </>
+      )}
 
       <div className='search__line' />
     </section>

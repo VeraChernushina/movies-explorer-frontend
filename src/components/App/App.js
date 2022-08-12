@@ -27,7 +27,7 @@ import {
   logOut
 } from "../../utils/MainApi";
 
-import { search } from "../../utils/utils";
+import { search, saveToLocalStorage } from "../../utils/utils";
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -37,6 +37,7 @@ const App = () => {
   const [movies, setMovies] = useState([]);
   const [savedMovies, setSavedMovies] = useState([]);
   const [searchedMovies, setSearchedMovies] = useState([]);
+  const [searchCount, setSearchCount] = useState(0);
   // popup and errors
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [popupMessage, setPopupMessage] = useState('');
@@ -168,37 +169,29 @@ const App = () => {
 
   // search movies by search request
 
-  const searchMovies = (searchRequest, isMovieFilter) => {
-    if (searchRequest.trim() === '') {
+  const handleSearchMovies = (searchRequest, isFormValid, isShortMovies) => {
+    const movies = JSON.parse(localStorage.getItem('movies'));
+    if (!isFormValid || !searchRequest) {
       setPopupMessage('Нужно ввести ключевое слово');
       setIsPopupOpen(true);
-      return;
-    }
-    setIsLoading(true);
-    if (!movies || movies.length === 0) {
+    } else if (!movies) {
+      setIsLoading(true);
       moviesApi.getMovies()
-        .then((data) => {
-          setMovies(data);
-          const filteredMovies = search(data, isMovieFilter, searchRequest);
-          localStorage.setItem('searchRequest', searchRequest);
-          localStorage.setItem('searchedMovies', JSON.stringify(filteredMovies));
-          localStorage.setItem('filter', isMovieFilter);
-          setSearchedMovies(filteredMovies);
+        .then((moviesList) => {
+          localStorage.setItem('movies', JSON.stringify(moviesList));
+          setIsLoading(false);
+          const searchedFilms = search(moviesList, isShortMovies, searchRequest);
+          saveToLocalStorage(searchedFilms, isShortMovies, searchRequest);
+          setSearchCount(prevState => prevState + 1)
         })
-        .catch(error => {
-          setPopupMessage(error);
-          setIsPopupOpen(true);
-        })
-        .finally(() => {
+        .catch((err) => {
+          setPopupMessage(err.message)
           setIsLoading(false);
         })
-    } else {
-      const filteredMovies = search(movies, isMovieFilter, searchRequest);
-      localStorage.setItem('searchRequest', searchRequest);
-      localStorage.setItem('searchedMovies', JSON.stringify(filteredMovies));
-      localStorage.setItem('filter', isMovieFilter);
-      setSearchedMovies(filteredMovies);
-      setIsLoading(false);
+    } else if (searchRequest) {
+      const searchedFilms = search(movies, isShortMovies, searchRequest);
+      saveToLocalStorage(searchedFilms, isShortMovies, searchRequest);
+      setSearchCount(prevState => prevState + 1);
     }
   }
 
@@ -206,7 +199,7 @@ const App = () => {
 
   const handleClosePopup = () => {
     setIsPopupOpen(false);
-    setPopupMessage(null);
+    setPopupMessage('');
   };
 
   /* Update user's email and name */
@@ -233,11 +226,11 @@ const App = () => {
   const handleSignOut = () => {
     return logOut().then(() => {
       localStorage.clear();
-      setCurrentUser(null);
-      setPopupMessage(null);
-      setMovies(null);
-      setSavedMovies(null);
-      setSearchedMovies(null);
+      setCurrentUser({});
+      setPopupMessage('');
+      setSavedMovies([]);
+      setSearchedMovies([]);
+      setSearchCount(0);
       setIsLoggedIn(false);
       history.push('/');
     })
@@ -260,15 +253,16 @@ const App = () => {
             loggedIn={isLoggedIn}
             movies={searchedMovies}
             savedMovies={savedMovies}
-            onSearchMovies={searchMovies}
+            onSearchMovies={handleSearchMovies}
             isLoading={isLoading}
             onSave={handleSaveMovie}
             onDelete={handleDeleteMovie}
+            searchCount={searchCount}
           />
           <ProtectedRoute
             path='/saved-movies'
             component={SavedMovies}
-            movies={savedMovies}
+            savedMovies={savedMovies}
             loggedIn={isLoggedIn}
             isLoading={isLoading}
             onDelete={handleDeleteMovie}

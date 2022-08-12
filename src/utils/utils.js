@@ -10,7 +10,7 @@ export const convertMinToHours = (num) => {
   }
 };
 
-export const filter = (movies, filterState) => {
+export const filterShortMovies = (movies, filterState) => {
   if (!filterState) {
     return movies;
   }
@@ -19,7 +19,13 @@ export const filter = (movies, filterState) => {
 
 export const search = (movies, filterState, searchRequest) => {
   const lowerCaseRequest = searchRequest.toLowerCase();
-  return filter(movies, filterState).filter(movie => {
+  return filterShortMovies(movies, filterState).filter(movie => {
     return (searchRequest.trim() !== '') && movie.nameRU.includes(lowerCaseRequest)
   })
 };
+
+export const saveToLocalStorage = (searchedMovies, isMovieFilter, searchRequest) => {
+  localStorage.setItem('searchRequest', searchRequest);
+  localStorage.setItem('isMovieFilter', JSON.stringify(isMovieFilter));
+  localStorage.setItem('searchedMovies', JSON.stringify(searchedMovies));
+}

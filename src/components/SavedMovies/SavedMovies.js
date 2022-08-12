@@ -6,51 +6,52 @@ import Footer from '../Footer/Footer';
 import Preloader from '../Preloader/Preloader';
 import './SavedMovies.css';
 
-import { search, filter } from '../../utils/utils';
+import { search, filterShortMovies } from '../../utils/utils';
 
 const SavedMovies = ({
   loggedIn,
-  movies,
+  savedMovies,
   isLoading,
   onDelete
 }) => {
-  const [renderedMovies, setRenderedMovies] = useState(movies);
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [isMovieFilter, setIsMovieFilter] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isShortMoviesInSM, setIsShortMoviesInSM] = useState(false);
+  const [renderedMovies, setRenderedMovies] = useState(savedMovies);
 
   useEffect(() => {
-    if (movies.length === 0) {
+    if (savedMovies.length === 0) {
       setErrorMessage('Вы еще ничего не сохранили')
     } else {
-      setRenderedMovies(movies);
-      setErrorMessage(null);
+      setRenderedMovies(savedMovies);
+      setErrorMessage('');
     }
-  }, [movies])
+  }, [savedMovies])
 
 
-  function handleSearchSavedMovies(searchRequest, isMovieFilter) {
-    const searchedFilms = search(movies, isMovieFilter, searchRequest);
+  const handleSearchMovies = (searchInput, isShortMovies, reset) => {
+    const searchedFilms = search(savedMovies, isShortMovies, searchInput);
     if (searchedFilms.length === 0) {
       setErrorMessage('Ничего не найдено.')
       setRenderedMovies([]);
+      reset();
     } else {
       setRenderedMovies(searchedFilms);
     }
   }
 
-  function toggleShortMoviesFilter() {
-    setIsMovieFilter(!isMovieFilter)
-    if (!isMovieFilter && movies) {
-      const showedShortMovies = filter(movies, isMovieFilter);
+  const toggleShortMoviesFilter = () => {
+    setIsShortMoviesInSM(!isShortMoviesInSM)
+    if (!isShortMoviesInSM && savedMovies) {
+      const showedShortMovies = filterShortMovies(savedMovies);
       if (showedShortMovies.length === 0) {
         setErrorMessage('Ничего не найдено');
         setRenderedMovies([]);
       } else {
         setRenderedMovies(showedShortMovies);
       }
-    } else if (isMovieFilter && movies) {
-      setErrorMessage(null);
-      setRenderedMovies(movies);
+    } else if (isShortMoviesInSM && savedMovies) {
+      setErrorMessage('');
+      setRenderedMovies(savedMovies);
     }
   }
 
@@ -59,9 +60,11 @@ const SavedMovies = ({
       <Header loggedIn={loggedIn} />
       <div className='savedMovies__content'>
         <SearchForm
-          isMovieFilter={isMovieFilter}
-          onSearchMovies={handleSearchSavedMovies}
+          isMovieFilter={isShortMoviesInSM}
+          onSearchMovies={handleSearchMovies}
           onFilter={toggleShortMoviesFilter}
+          disabled={!savedMovies.length}
+          isSavedMoviesPage={true}
         />
         {isLoading && (
           <Preloader />
@@ -73,7 +76,7 @@ const SavedMovies = ({
           <MoviesCardList
             isSavedMoviesPage={true}
             movies={renderedMovies}
-            savedMovies={movies}
+            savedMovies={savedMovies}
             onDelete={onDelete}
           />
         )}

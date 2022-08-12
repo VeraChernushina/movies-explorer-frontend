@@ -7,110 +7,135 @@ import Preloader from '../Preloader/Preloader';
 
 import './Movies.css';
 
-import { search, filter } from '../../utils/utils';
+import { search, filterShortMovies, saveToLocalStorage, } from '../../utils/utils';
+
+import {
+  BIG_SCREEN_MOVIES_QTY,
+  MIDDLE_SCREEN_MOVIES_QTY,
+  SMALL_SCREEN_MOVIES_QTY,
+  MORE_MOVIES_BIG_SCREEN_QTY,
+  MORE_MOVIES_SMALL_SCREEN_QTY,
+  BIG_SCREEN,
+  SMALL_SCREEN
+} from '../../utils/constants';
 
 const Movies = ({
   loggedIn,
   onSearchMovies,
   isLoading,
-  movies,
   savedMovies,
   onSave,
-  onDelete
+  searchCount
 }) => {
-  const [isMoreButton, setIsMoreButton] = useState(false);
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  const [renderedCardsNumber, setRenderedCardsNumber] = useState(12);
-  const [addedCardsNumber, setAddedCardsNumber] = useState(0);
-  const [renderedMovies, setRenderedMovies] = useState(movies);
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [isMovieFilter, setIsMovieFilter] = useState(false);
+  const searchedMoviesInLS = JSON.parse(localStorage.getItem('searchedMovies'));
+  const isShortMoviesInLS = JSON.parse(localStorage.getItem('isMovieFilter'));
 
-  const updateWindowWidth = () => {
-    setTimeout(() => setWindowWidth(window.innerWidth), 1500);
-  };
+  const [searchedMovies, setSearchedMovies] = useState(searchedMoviesInLS === null ? [] : searchedMoviesInLS);
+  const [isMovieFilter, setIsMovieFilter] = useState(isShortMoviesInLS ? isShortMoviesInLS : false);
+  const [screenWidth, setScreenWidth] = useState(window.screen.width);
+  const [windowOuterWidth, setWindowOuterWidth] = useState(window.outerWidth);
+  const [errorMessage, setErrorMessage] = useState('');
 
-  useEffect(() => {
-    window.addEventListener('resize', updateWindowWidth);
+  const searchedMoviesCount = searchedMovies ? searchedMovies.length : 0;
+  const bigScreenLayout = (screenWidth > BIG_SCREEN || windowOuterWidth > BIG_SCREEN) && searchedMoviesCount >= BIG_SCREEN_MOVIES_QTY;
+  const middleScreenLayout = ((screenWidth > SMALL_SCREEN && screenWidth <= BIG_SCREEN) || (windowOuterWidth > SMALL_SCREEN && windowOuterWidth <= BIG_SCREEN)) && searchedMoviesCount >= MIDDLE_SCREEN_MOVIES_QTY;
+  const smallScreenLayout = (screenWidth <= SMALL_SCREEN || windowOuterWidth <= SMALL_SCREEN) && searchedMoviesCount >= SMALL_SCREEN_MOVIES_QTY;
 
-    if (windowWidth >= 1280) {
-      setRenderedCardsNumber(12);
-      setAddedCardsNumber(3);
-    } else if (windowWidth < 1280 && windowWidth > 890) {
-      setRenderedCardsNumber(8);
-      setAddedCardsNumber(2);
+  const [renderedMovies, setRenderedMovies] = useState(() => {
+    if (bigScreenLayout) {
+      return searchedMovies.slice(0, BIG_SCREEN_MOVIES_QTY);
+    } else if (middleScreenLayout) {
+      return searchedMovies.slice(0, MIDDLE_SCREEN_MOVIES_QTY);
+    } else if (smallScreenLayout) {
+      return searchedMovies.slice(0, SMALL_SCREEN_MOVIES_QTY);
     } else {
-      setRenderedCardsNumber(5);
-      setAddedCardsNumber(2);
+      return searchedMovies
     }
+  });
 
-    return () => window.removeEventListener('resize', updateWindowWidth);
-  }, [windowWidth]);
+  const toggleShortMoviesFilter = () => {
+    setIsMovieFilter(!isMovieFilter);
+    const searchInput = localStorage.getItem('searchRequest');
+    const movies = JSON.parse(localStorage.getItem('movies'));
+    if (!searchInput && !movies) {
+      return null
+    } else if (!isMovieFilter && searchedMovies) {
+      let showedShortMovies = filterShortMovies(searchedMovies);
+      if (showedShortMovies === null) {
+        showedShortMovies = [];
+      }
+      saveToLocalStorage(showedShortMovies, !isMovieFilter, searchInput);
+      setSearchedMovies(showedShortMovies);
+    } else {
+      const showedMovies = search(movies, !isMovieFilter, searchInput);
+      saveToLocalStorage(showedMovies, !isMovieFilter, searchInput);
+      setSearchedMovies(showedMovies);
+    }
+  }
+
+  const traceScreenWidth = () => {
+    setScreenWidth(window.screen.width);
+  }
+
+  const traceWindowOuterWidth = () => {
+    setWindowOuterWidth(window.outerWidth);
+  }
 
   const handleMoreClick = () => {
-    setRenderedMovies(
-      movies.slice(0, renderedMovies.length + addedCardsNumber)
-    );
-    if (renderedMovies.length >= movies.length - addedCardsNumber) {
-      setIsMoreButton(false);
-    }
-  };
-
-  useEffect(() => {
-    const isFilter = localStorage.getItem('filter');
-    console.log(isFilter)
-    setIsMovieFilter(isFilter);
-  }, [])
-
-  useEffect(() => {
-    setRenderedMovies(movies.slice(0, renderedCardsNumber));
-    if (movies.length <= renderedCardsNumber) {
-      setIsMoreButton(false);
+    if (screenWidth > BIG_SCREEN || windowOuterWidth > BIG_SCREEN) {
+      setRenderedMovies(searchedMovies.slice(0, renderedMovies.length + MORE_MOVIES_BIG_SCREEN_QTY))
     } else {
-      setIsMoreButton(true);
+      setRenderedMovies(searchedMovies.slice(0, renderedMovies.length + MORE_MOVIES_SMALL_SCREEN_QTY))
     }
-  }, [movies]);
+  }
 
   useEffect(() => {
-    setRenderedMovies(movies);
-    setErrorMessage('');
-  }, [])
-
-    useEffect(() => {
-    const searchedMovies = localStorage.getItem('searchedMovies') ? JSON.parse(localStorage.getItem('searchedMovies')) : null;
-    if (!searchedMovies) {
+    if (!renderedMovies) {
       setErrorMessage('Введите ключевое слово для поиска фильма!')
-    } else if (searchedMovies && searchedMovies.length === 0) {
+    } else if (renderedMovies && renderedMovies.length === 0) {
       setErrorMessage('Ничего не найдено.');
-    } else if (searchedMovies) {
+    } else if (renderedMovies) {
       setRenderedMovies(searchedMovies);
       setErrorMessage('');
     } else {
-      setRenderedMovies(movies)
+      setRenderedMovies(searchedMoviesInLS)
     }
-  }, [movies])
+  }, [])
 
-  const toggleShortMoviesFilter = () => {
-    setIsMovieFilter(isMovieFilter);
-    const movies = JSON.parse(localStorage.getItem('movies'));
-    if (!movies) {
-      return null
-    } else if (!isMovieFilter) {
-      let renderedShortMovies = filter(renderedMovies);
-      if (renderedShortMovies === null) {
-        renderedShortMovies = [];
-      }
-      localStorage.setItem('filter', isMovieFilter);
-      localStorage.setItem('searchedMovies', renderedShortMovies);
-      setRenderedMovies(renderedShortMovies);
-    } else {
-      const searchRequest = localStorage.getItem('searchRequest');
-      const showedMovies = search(movies, !isMovieFilter, searchRequest);
-      localStorage.setItem('filter', isMovieFilter);
-      localStorage.setItem('searchedMovies', showedMovies);
-      setRenderedMovies(showedMovies);
+  useEffect(() => {
+    const searchedMoviesInLS = localStorage.getItem('searchedMovies');
+    const isShortMoviesInLS = localStorage.getItem('isMovieFilter');
+    if (searchedMoviesInLS !== null && isShortMoviesInLS !== null) {
+      setSearchedMovies(JSON.parse(searchedMoviesInLS));
+      setIsMovieFilter(JSON.parse(isShortMoviesInLS));
     }
-  }
+  }, [searchCount])
+
+  useEffect(() => {
+    window.addEventListener('resize', traceScreenWidth);
+    return () => {
+      window.removeEventListener('resize', traceScreenWidth)
+    }
+  }, [])
+
+  useEffect(() => {
+    window.addEventListener('resize', traceWindowOuterWidth)
+    return () => {
+      window.removeEventListener('resize', traceWindowOuterWidth)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (bigScreenLayout) {
+      setRenderedMovies(searchedMovies.slice(0, BIG_SCREEN_MOVIES_QTY))
+    } else if (middleScreenLayout) {
+      setRenderedMovies(searchedMovies.slice(0, MIDDLE_SCREEN_MOVIES_QTY));
+    } else if (smallScreenLayout) {
+      setRenderedMovies(searchedMovies.slice(0, SMALL_SCREEN_MOVIES_QTY));
+    } else {
+      setRenderedMovies(searchedMovies);
+    }
+  }, [screenWidth, windowOuterWidth, searchedMovies, isMovieFilter])
 
   return (
     <section className='movies__page'>
@@ -134,10 +159,9 @@ const Movies = ({
               movies={renderedMovies}
               savedMovies={savedMovies}
               onSave={onSave}
-              onDelete={onDelete}
             />
             <button
-              className={isMoreButton ? 'cards__button' : 'cards__button_hidden'}
+              className={(renderedMovies && searchedMoviesCount !== renderedMovies.length) ? 'cards__button' : 'cards__button_hidden'}
               onClick={handleMoreClick}
             >
               Ещё

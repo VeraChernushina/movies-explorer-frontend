@@ -2,7 +2,8 @@ import './FilterCheckbox.css';
 
 const FilterCheckbox = ({ isMovieFilter, onFilter }) => {
   const filterMovies = (event) => {
-    onFilter(event.target.checked);
+    onFilter(event.target.checked)
+    localStorage.setItem('filter', event.target.checked);
   };
 
   return (
