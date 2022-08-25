@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Route, Redirect, Switch, useHistory } from "react-router-dom";
+import { Route, Redirect, Switch, useHistory, useLocation } from "react-router-dom";
 
 import './App.css';
 
@@ -34,6 +34,7 @@ const App = () => {
   const [popupMessage, setPopupMessage] = useState('');
 
   const history = useHistory();
+  const location = useLocation();
 
   useEffect(() => {
     handleTokenCheck()
@@ -47,8 +48,8 @@ const App = () => {
         history.push('/signin');
       })
       .catch(error => {
-        setPopupMessage('При регистрации пользователя произошла ошибка.');
-        setIsPopupOpen(true);
+          setPopupMessage(error);
+          setIsPopupOpen(true);
       });
   };
 
@@ -95,7 +96,8 @@ const App = () => {
           setSavedMovies(updatedSavedMovies);
         })
         .catch(error => {
-          console.log(error);
+          setPopupMessage(error);
+          setIsPopupOpen(true);
         })
         .finally(() => {
           setIsLoading(false);
@@ -106,7 +108,8 @@ const App = () => {
           setSavedMovies((prev) => [...prev, newSavedMovie]);
         })
         .catch((error) => {
-          console.log(error)
+          setPopupMessage(error);
+          setIsPopupOpen(true);
         })
     }
   }
@@ -121,7 +124,8 @@ const App = () => {
         setSavedMovies(prev => updatedSavedMovies);
       })
       .catch(error => {
-        console.log(error);
+        setPopupMessage(error);
+        setIsPopupOpen(true);
       })
       .finally(() => {
         setIsLoading(false);
@@ -167,15 +171,16 @@ const App = () => {
   };
 
   const handleTokenCheck = () => {
+    const path = location.pathname;
     const jwt = localStorage.getItem('jwt');
     if (!jwt) {
       return;
     }
     getContent(jwt)
       .then((data) => {
-        setCurrentUser(data)
         setIsLoggedIn(true);
-        history.push('/');
+        setCurrentUser(data)
+        history.push(path);
       })
       .catch((err) => console.log(err));
     getSavedMovies(jwt)
@@ -185,18 +190,26 @@ const App = () => {
       .catch((err) => console.log(err));
   };
 
-  useEffect(() => {
-    if (isLoggedIn) {
-      history.push('/');
-    }
-  }, [isLoggedIn, history]);
-
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="App">
         <Switch>
           <Route exact path='/'>
             <Main loggedIn={isLoggedIn} />
+          </Route>
+          <Route exact path='/signup'>
+            {!isLoggedIn ? (
+              <Register onRegister={handleRegistration} />
+            ) : (
+              <Redirect to='/' />
+            )}
+          </Route>
+          <Route exact path='/signin'>
+            {!isLoggedIn ? (
+              <Login onLogin={handleAuthorization} />
+            ) : (
+              <Redirect to='/' />
+            )}
           </Route>
           <ProtectedRoute
             path='/movies'
@@ -228,30 +241,6 @@ const App = () => {
             onUpdateUser={handleUpdateUser}
             onSignOut={handleSignOut}
           />
-          <Route exact path='/signup'>
-            {!isLoggedIn ? (
-              <Register onRegister={handleRegistration} />
-            ) : (
-              <Redirect to='/' />
-            )}
-          </Route>
-          <Route exact path='/signin'>
-            {!isLoggedIn ? (
-              <Login onLogin={handleAuthorization} />
-            ) : (
-              <Redirect to='/' />
-            )}
-          </Route>
-
-          <Route exact path='/movies'>
-            {isLoggedIn ? <Redirect to='/movies' /> : <Redirect to='/' />}
-          </Route>
-          <Route exact path='/saved-movies'>
-            {isLoggedIn ? <Redirect to='/saved-movies' /> : <Redirect to='/' />}
-          </Route>
-          <Route exact path='/profile'>
-            {isLoggedIn ? <Redirect to='/profile' /> : <Redirect to='/' />}
-          </Route>
           <Route path='*'>
             <NotFoundPage />
           </Route>

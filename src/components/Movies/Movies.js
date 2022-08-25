@@ -123,7 +123,6 @@ const Movies = ({
           savedMovies={savedMovies}
           onSave={onSave}
         />}
-        {!isLoading && notFound && <p className='movies__message'>Ничего не найдено.</p>}
       </div>
       <Footer />
     </section>

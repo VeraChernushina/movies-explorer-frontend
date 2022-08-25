@@ -84,7 +84,6 @@ const SavedMovies = ({
             onDelete={onDelete}
           />
         )}
-        {!isLoading && notFound && <p className='movies__message'>Ничего не найдено.</p>}
       </div>
       <Footer />
     </section>
