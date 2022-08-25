@@ -14,25 +14,3 @@
   text-align: center;
   padding: 20px 0;
 }
-
-.cards__button {
-  width: calc(100% - 140px);
-  border: none;
-  border-radius: 6px;
-  font-weight: 500;
-  font-size: 12px;
-  line-height: 15px;
-  background-color: #F9F9F9;
-  padding: 11px 0 9px;
-  cursor: pointer;
-  transition: .3s ease;
-  margin: 0 auto 80px;
-}
-
-.cards__button_hidden {
-  display: none;
-}
-
-.cards__button:hover {
-  opacity: 0.8;
-}

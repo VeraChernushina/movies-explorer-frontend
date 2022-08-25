@@ -12,10 +12,9 @@ const checkResponse = (res) => {
   return Promise.reject(`Ошибка: ${res.status}`);
 }
 
-export const register = ({ name, email, password }) => {
+export const register = async ({ name, email, password }) => {
   return fetch(`${BASE_API_URL}/signup`, {
     method: 'POST',
-    credentials: 'include',
     headers,
     body: JSON.stringify({
       name,
@@ -25,28 +24,31 @@ export const register = ({ name, email, password }) => {
   }).then((res) => checkResponse(res));
 };
 
-export const authorize = ({ email, password }) => {
+export const authorize = async ({ email, password }) => {
   return fetch(`${BASE_API_URL}/signin`, {
     method: 'POST',
-    credentials: 'include',
     headers,
     body: JSON.stringify({ email, password }),
   }).then((res) => checkResponse(res));
 };
 
-export const getContent = () => {
+export const getContent = async (jwt) => {
   return fetch(`${BASE_API_URL}/users/me`, {
     method: 'GET',
-    credentials: 'include',
-    headers,
+    headers: {
+      ...headers,
+      'Authorization': `Bearer ${jwt}`,
+    }
   }).then((res) => checkResponse(res));
 };
 
-export const updateUserInfo = (data) => {
+export const updateUserInfo = async (data, jwt) => {
   return fetch(`${BASE_API_URL}/users/me`, {
     method: 'PATCH',
-    headers,
-    credentials: 'include',
+    headers: {
+      ...headers,
+      'Authorization': `Bearer ${jwt}`,
+    },
     body: JSON.stringify({
       name: data.name,
       email: data.email,
@@ -54,19 +56,23 @@ export const updateUserInfo = (data) => {
   }).then((res) => checkResponse(res));
 };
 
-export const getSavedMovies = () => {
+export const getSavedMovies = async (jwt) => {
   return fetch(`${BASE_API_URL}/movies`, {
     method: 'GET',
-    headers,
-    credentials: 'include',
+    headers: {
+      ...headers,
+      'Authorization': `Bearer ${jwt}`,
+    }
   }).then((res) => checkResponse(res));
 };
 
-export const saveMovie = (movie) => {
+export const saveMovie = async (movie, jwt) => {
   return fetch(`${BASE_API_URL}/movies`, {
     method: 'POST',
-    headers,
-    credentials: 'include',
+    headers: {
+      ...headers,
+      'Authorization': `Bearer ${jwt}`,
+    },
     body: JSON.stringify({
       country: movie.country,
       director: movie.director,
@@ -83,20 +89,12 @@ export const saveMovie = (movie) => {
   }).then((res) => checkResponse(res));
 };
 
-export const deleteMovie = (id) => {
+export const deleteMovie = async (id, jwt) => {
   return fetch(`${BASE_API_URL}/movies/${id}`, {
     method: 'DELETE',
-    headers,
-    credentials: 'include',
+    headers: {
+      ...headers,
+      'Authorization': `Bearer ${jwt}`,
+    },
   }).then((res) => checkResponse(res));
 };
-
-export const logOut = () => {
-  return fetch(`${BASE_API_URL}/signout`, {
-    method: 'POST',
-    headers,
-    credentials: 'include',
-  }).then((res) => {
-      return checkResponse(res);
-    });
-}

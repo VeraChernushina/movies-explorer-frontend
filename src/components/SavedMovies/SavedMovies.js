@@ -6,80 +6,85 @@ import Footer from '../Footer/Footer';
 import Preloader from '../Preloader/Preloader';
 import './SavedMovies.css';
 
-import { search, filterShortMovies } from '../../utils/utils';
+import { filterMovies, filterShortMovies } from '../../utils/utils';
 
 const SavedMovies = ({
   loggedIn,
   savedMovies,
   isLoading,
-  onDelete
+  onDelete,
+  setPopupMessage,
+  setIsPopupOpen
 }) => {
-  const [errorMessage, setErrorMessage] = useState('');
-  const [isShortMoviesInSM, setIsShortMoviesInSM] = useState(false);
-  const [renderedMovies, setRenderedMovies] = useState(savedMovies);
+  const [shortMovies, setShortMovies] = useState(false);
+  const [notFound, setNotFound] = useState(false);
+  const [showedMovies, setShowedMovies] = useState(savedMovies);
+  const [filteredMovies, setFilteredMovies] = useState(showedMovies);
+
+  const handleSearchSubmit = (inputValue) => {
+    const moviesList = filterMovies(savedMovies, inputValue, shortMovies);
+    if (moviesList.length === 0) {
+      setNotFound(true);
+      setPopupMessage('Ничего не найдено.');
+      setIsPopupOpen(true);
+    } else {
+      setNotFound(false);
+      setFilteredMovies(moviesList);
+      setShowedMovies(moviesList);
+    }
+  }
+
+  const handleShortFilms = () => {
+    if (!shortMovies) {
+      setShortMovies(true);
+      localStorage.setItem('shortSavedMovies', true);
+      setShowedMovies(filterShortMovies(filteredMovies));
+      filterShortMovies(filteredMovies).length === 0 ? setNotFound(true) : setNotFound(false);
+    } else {
+      setShortMovies(false);
+      localStorage.setItem('shortSavedMovies', false);
+      filteredMovies.length === 0 ? setNotFound(true) : setNotFound(false);
+      setShowedMovies(filteredMovies);
+    }
+  }
 
   useEffect(() => {
-    if (savedMovies.length === 0) {
-      setErrorMessage('Вы еще ничего не сохранили')
+    if (localStorage.getItem('shortSavedMovies') === 'true') {
+      setShortMovies(true);
+      setShowedMovies(filterShortMovies(savedMovies));
     } else {
-      setRenderedMovies(savedMovies);
-      setErrorMessage('');
+      setShortMovies(false);
+      setShowedMovies(savedMovies);
     }
-  }, [savedMovies])
+  }, [savedMovies]);
 
+  useEffect(() => {
+    setFilteredMovies(savedMovies);
+    savedMovies.length !== 0 ? setNotFound(false) : setNotFound(true);
+  }, [savedMovies]);
 
-  const handleSearchMovies = (searchInput, isShortMovies, reset) => {
-    const searchedFilms = search(savedMovies, isShortMovies, searchInput);
-    if (searchedFilms.length === 0) {
-      setErrorMessage('Ничего не найдено.')
-      setRenderedMovies([]);
-      reset();
-    } else {
-      setRenderedMovies(searchedFilms);
-    }
-  }
-
-  const toggleShortMoviesFilter = () => {
-    setIsShortMoviesInSM(!isShortMoviesInSM)
-    if (!isShortMoviesInSM && savedMovies) {
-      const showedShortMovies = filterShortMovies(savedMovies);
-      if (showedShortMovies.length === 0) {
-        setErrorMessage('Ничего не найдено');
-        setRenderedMovies([]);
-      } else {
-        setRenderedMovies(showedShortMovies);
-      }
-    } else if (isShortMoviesInSM && savedMovies) {
-      setErrorMessage('');
-      setRenderedMovies(savedMovies);
-    }
-  }
-
-  return (
+    return (
     <section className='savedMovies__page'>
       <Header loggedIn={loggedIn} />
       <div className='savedMovies__content'>
         <SearchForm
-          isMovieFilter={isShortMoviesInSM}
-          onSearchMovies={handleSearchMovies}
-          onFilter={toggleShortMoviesFilter}
-          disabled={!savedMovies.length}
+          onSearchMovies={handleSearchSubmit}
+          onFilter={handleShortFilms}
+          shortMovies={shortMovies}
           isSavedMoviesPage={true}
         />
         {isLoading && (
           <Preloader />
         )}
-        {(errorMessage && !isLoading) && (
-          <p className='savedMovies__message'>{errorMessage}</p>
-        )}
-        {(!isLoading && !errorMessage) && (
+        {!isLoading && (
           <MoviesCardList
             isSavedMoviesPage={true}
-            movies={renderedMovies}
+            movies={showedMovies}
             savedMovies={savedMovies}
             onDelete={onDelete}
           />
         )}
+        {!isLoading && notFound && <p className='movies__message'>Ничего не найдено.</p>}
       </div>
       <Footer />
     </section>

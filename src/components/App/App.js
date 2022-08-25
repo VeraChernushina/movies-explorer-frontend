@@ -15,7 +15,6 @@ import NotFoundPage from "../NotFoundPage/NotFoundPage";
 import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 import InfoTooltip from "../InfoTooltip/InfoTooltip";
 
-import moviesApi from "../../utils/MovieApi";
 import {
   register,
   authorize,
@@ -23,45 +22,26 @@ import {
   updateUserInfo,
   saveMovie,
   deleteMovie,
-  getSavedMovies,
-  logOut
+  getSavedMovies
 } from "../../utils/MainApi";
-
-import { search, saveToLocalStorage } from "../../utils/utils";
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  // movies' state
-  const [movies, setMovies] = useState([]);
   const [savedMovies, setSavedMovies] = useState([]);
-  const [searchedMovies, setSearchedMovies] = useState([]);
-  const [searchCount, setSearchCount] = useState(0);
-  // popup and errors
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [popupMessage, setPopupMessage] = useState('');
 
   const history = useHistory();
 
+  useEffect(() => {
+    handleTokenCheck()
+  }, [history])
+
   /*--------------------- Authorization ---------------------- */
 
-  const handleTokenCheck = () => {
-    setIsLoading(true);
-    getContent()
-      .then((data) => {
-        if (data.name) {
-          setCurrentUser(data);
-          setIsLoggedIn(true);
-        }
-      })
-      .catch((error) => {
-        console.log(error)
-        setIsLoggedIn(false)
-      })
-  };
-
-  const handleRegistration = (data) => {
+  const handleRegistration = async (data) => {
     return register(data)
       .then(() => {
         history.push('/signin');
@@ -72,14 +52,15 @@ const App = () => {
       });
   };
 
-  const handleAuthorization = (data) => {
+  const handleAuthorization = async (data) => {
     return authorize(data)
-      .then(() => {
+      .then((data) => {
         setIsLoading(true);
-        Promise.all([getContent(), getSavedMovies()])
+        localStorage.setItem('jwt', data.token);
+        Promise.all([getContent(data.token), getSavedMovies(data.token)])
           .then(([userInfo, userMovies]) => {
             setCurrentUser(userInfo);
-            localStorage.setItem('savedMovies', JSON.stringify(userMovies))
+            localStorage.setItem('savedMovies', JSON.stringify(userMovies));
             setSavedMovies(userMovies);
             setIsLoggedIn(true);
           })
@@ -97,42 +78,21 @@ const App = () => {
       });
   };
 
-  useEffect(() => {
-    handleTokenCheck()
-  }, [])
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      setIsLoading(true);
-      Promise.all([getContent(), getSavedMovies()])
-        .then(([userInfo, userMovies]) => {
-          setCurrentUser(userInfo);
-          setSavedMovies(userMovies);
-        })
-        .catch((error) => {
-          setPopupMessage(error);
-          setIsPopupOpen(true);
-        })
-        .finally(() => {
-          setIsLoading(false);
-        })
-    }
-  }, [isLoggedIn])
-
   /* --------------------- Movie cards' functions --------------------- */
 
   const handleSaveMovie = (movie) => {
+    const jwt = localStorage.getItem('jwt');
     const handledMovie = savedMovies.find(item => {
       return item.movieId === movie.id
     });
     const isLiked = Boolean(handledMovie);
     const id = handledMovie ? handledMovie._id : null;
     if (isLiked) {
-      deleteMovie(id)
+      deleteMovie(id, jwt)
         .then((card) => {
           const updatedSavedMovies = savedMovies.filter(item => card._id !== item._id);
           localStorage.setItem('savedMovies', updatedSavedMovies);
-          setSavedMovies(prev => updatedSavedMovies);
+          setSavedMovies(updatedSavedMovies);
         })
         .catch(error => {
           console.log(error);
@@ -141,7 +101,7 @@ const App = () => {
           setIsLoading(false);
         });
     } else {
-      saveMovie(movie)
+      saveMovie(movie, jwt)
         .then((newSavedMovie) => {
           setSavedMovies((prev) => [...prev, newSavedMovie]);
         })
@@ -153,7 +113,8 @@ const App = () => {
 
   const handleDeleteMovie = (movie) => {
     setIsLoading(true);
-    deleteMovie(movie._id)
+    const jwt = localStorage.getItem('jwt');
+    deleteMovie(movie._id, jwt)
       .then((card) => {
         const updatedSavedMovies = savedMovies.filter(item => card._id !== item._id);
         localStorage.setItem('savedMovies', updatedSavedMovies);
@@ -167,34 +128,6 @@ const App = () => {
       });
   };
 
-  // search movies by search request
-
-  const handleSearchMovies = (searchRequest, isFormValid, isShortMovies) => {
-    const movies = JSON.parse(localStorage.getItem('movies'));
-    if (!isFormValid || !searchRequest) {
-      setPopupMessage('Нужно ввести ключевое слово');
-      setIsPopupOpen(true);
-    } else if (!movies) {
-      setIsLoading(true);
-      moviesApi.getMovies()
-        .then((moviesList) => {
-          localStorage.setItem('movies', JSON.stringify(moviesList));
-          setIsLoading(false);
-          const searchedFilms = search(moviesList, isShortMovies, searchRequest);
-          saveToLocalStorage(searchedFilms, isShortMovies, searchRequest);
-          setSearchCount(prevState => prevState + 1)
-        })
-        .catch((err) => {
-          setPopupMessage(err.message)
-          setIsLoading(false);
-        })
-    } else if (searchRequest) {
-      const searchedFilms = search(movies, isShortMovies, searchRequest);
-      saveToLocalStorage(searchedFilms, isShortMovies, searchRequest);
-      setSearchCount(prevState => prevState + 1);
-    }
-  }
-
   /*--------------- Popup function ------------ */
 
   const handleClosePopup = () => {
@@ -205,8 +138,9 @@ const App = () => {
   /* Update user's email and name */
 
   const handleUpdateUser = (newUserInfo) => {
+    const jwt = localStorage.getItem('jwt');
     setIsLoading(true);
-    updateUserInfo(newUserInfo)
+    updateUserInfo(newUserInfo, jwt)
       .then((data) => {
         setCurrentUser(data);
         setPopupMessage('Профиль успешно редактирован!');
@@ -224,21 +158,38 @@ const App = () => {
   // log out function
 
   const handleSignOut = () => {
-    return logOut().then(() => {
-      localStorage.clear();
-      setCurrentUser({});
-      setPopupMessage('');
-      setSavedMovies([]);
-      setSearchedMovies([]);
-      setSearchCount(0);
-      setIsLoggedIn(false);
-      history.push('/');
-    })
-      .catch(error => {
-        setPopupMessage(error.message);
-        setIsPopupOpen(true);
-      })
+    localStorage.clear();
+    setCurrentUser({});
+    setPopupMessage('');
+    setSavedMovies([]);
+    setIsLoggedIn(false);
+    history.push('/');
   };
+
+  const handleTokenCheck = () => {
+    const jwt = localStorage.getItem('jwt');
+    if (!jwt) {
+      return;
+    }
+    getContent(jwt)
+      .then((data) => {
+        setCurrentUser(data)
+        setIsLoggedIn(true);
+        history.push('/');
+      })
+      .catch((err) => console.log(err));
+    getSavedMovies(jwt)
+      .then((movies) => {
+        setSavedMovies(movies)
+      })
+      .catch((err) => console.log(err));
+  };
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      history.push('/');
+    }
+  }, [isLoggedIn, history]);
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -251,13 +202,13 @@ const App = () => {
             path='/movies'
             component={Movies}
             loggedIn={isLoggedIn}
-            movies={searchedMovies}
             savedMovies={savedMovies}
-            onSearchMovies={handleSearchMovies}
+            onLoading={setIsLoading}
             isLoading={isLoading}
             onSave={handleSaveMovie}
             onDelete={handleDeleteMovie}
-            searchCount={searchCount}
+            setPopupMessage={setPopupMessage}
+            setIsPopupOpen={setIsPopupOpen}
           />
           <ProtectedRoute
             path='/saved-movies'
@@ -266,6 +217,8 @@ const App = () => {
             loggedIn={isLoggedIn}
             isLoading={isLoading}
             onDelete={handleDeleteMovie}
+            setPopupMessage={setPopupMessage}
+            setIsPopupOpen={setIsPopupOpen}
           />
           <ProtectedRoute
             path='/profile'
@@ -276,10 +229,18 @@ const App = () => {
             onSignOut={handleSignOut}
           />
           <Route exact path='/signup'>
-            <Register onRegister={handleRegistration} />
+            {!isLoggedIn ? (
+              <Register onRegister={handleRegistration} />
+            ) : (
+              <Redirect to='/' />
+            )}
           </Route>
           <Route exact path='/signin'>
-            <Login onLogin={handleAuthorization} />
+            {!isLoggedIn ? (
+              <Login onLogin={handleAuthorization} />
+            ) : (
+              <Redirect to='/' />
+            )}
           </Route>
 
           <Route exact path='/movies'>
@@ -290,12 +251,6 @@ const App = () => {
           </Route>
           <Route exact path='/profile'>
             {isLoggedIn ? <Redirect to='/profile' /> : <Redirect to='/' />}
-          </Route>
-          <Route exact path='/signup'>
-            {!isLoggedIn ? <Redirect to='/signup' /> : <Redirect to='/' />}
-          </Route>
-          <Route exact path='/signin'>
-            {!isLoggedIn ? <Redirect to='/signin' /> : <Redirect to='/' />}
           </Route>
           <Route path='*'>
             <NotFoundPage />

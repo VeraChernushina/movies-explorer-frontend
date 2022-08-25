@@ -1,21 +1,13 @@
-import React, { useState, useEffect, useCallback } from 'react';
 import './MoviesCard.css';
 import { convertMinToHours } from '../../utils/utils';
 
 const MoviesCard = ({
   isSavedMoviesPage,
   movie,
-  savedMovies,
   onSave,
   onDelete,
+  saved
 }) => {
-  const [isSaved, setIsSaved] = useState(false);
-
-  const checkCard = useCallback(() => {
-    const result = savedMovies.find(item => item.movieId === movie.id && item.nameRU === movie.nameRU);
-    setIsSaved(result);
-  }, [savedMovies]);
-
   const handleSaveCard = () => {
     onSave(movie);
   };
@@ -23,10 +15,6 @@ const MoviesCard = ({
   const handleDeleteCard = () => {
     onDelete(movie);
   };
-
-  useEffect(() => {
-    checkCard();
-  }, [savedMovies, checkCard]);
 
   return (
     <div className='card'>
@@ -44,13 +32,13 @@ const MoviesCard = ({
         <span className='card__name'>{movie.nameRU}</span>
         <span className='card__duration'>{convertMinToHours(movie.duration)}</span>
       </div>
-      {isSaved && !isSavedMoviesPage &&
+      {saved && !isSavedMoviesPage &&
         <button type='button' className='card__button_saved' onClick={handleSaveCard} />}
       {isSavedMoviesPage ? (
         <button className='card__button_delete' type='button' onClick={handleDeleteCard} />
       ) : (
         <button
-          className={!isSaved ? 'card__button' : 'card__button_hidden'}
+          className={!saved ? 'card__button' : 'card__button_hidden'}
           type='button'
           onClick={handleSaveCard}
         >
