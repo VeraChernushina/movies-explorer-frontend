@@ -237,7 +237,6 @@ const App = () => {
             path='/profile'
             component={Profile}
             loggedIn={isLoggedIn}
-            currentUser={currentUser}
             onUpdateUser={handleUpdateUser}
             onSignOut={handleSignOut}
           />

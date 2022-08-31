@@ -1,9 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import './Profile.css';
 import Header from '../Header/Header';
 import useForm from '../../hooks/useForm';
+import CurrentUserContext from '../../contexts/CurrentUserContext';
 
-const Profile = ({ loggedIn, currentUser, onUpdateUser, onSignOut }) => {
+const Profile = ({ onUpdateUser, onSignOut, loggedIn }) => {
+  const currentUser = useContext(CurrentUserContext);
   const { enteredValues, handleChange, isFormValid, resetForm } = useForm();
 
   const handleSubmit = (event) => {
