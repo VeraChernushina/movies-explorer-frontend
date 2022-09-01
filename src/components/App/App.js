@@ -38,14 +38,14 @@ const App = () => {
 
   useEffect(() => {
     handleTokenCheck()
-  }, [history])
+  }, [])
 
   /*--------------------- Authorization ---------------------- */
 
-  const handleRegistration = async (data) => {
-    return register(data)
+  const handleRegistration = async ({ name, email, password }) => {
+    return register({ name, email, password })
       .then(() => {
-        history.push('/signin');
+        handleAuthorization({ email, password });
       })
       .catch(error => {
           setPopupMessage(error);
@@ -56,14 +56,14 @@ const App = () => {
   const handleAuthorization = async (data) => {
     return authorize(data)
       .then((data) => {
-        setIsLoading(true);
+        setIsLoggedIn(true);
         localStorage.setItem('jwt', data.token);
+        history.push('/movies');
         Promise.all([getContent(data.token), getSavedMovies(data.token)])
           .then(([userInfo, userMovies]) => {
             setCurrentUser(userInfo);
             localStorage.setItem('savedMovies', JSON.stringify(userMovies));
             setSavedMovies(userMovies);
-            setIsLoggedIn(true);
           })
           .catch(error => {
             console.log(error);
@@ -71,7 +71,6 @@ const App = () => {
           .finally(() => {
             setIsLoading(false);
           })
-        history.push('/movies');
       })
       .catch(error => {
         setPopupMessage(error);
