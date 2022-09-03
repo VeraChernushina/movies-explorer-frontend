@@ -45,6 +45,12 @@ const Movies = ({
   }
 
   const handleSearchSubmit = (inputValue) => {
+    if (inputValue.trim().length === 0) {
+      setPopupMessage('Нужно ввести ключевое слово');
+      setIsPopupOpen(true);
+      return;
+    }
+
     localStorage.setItem('movieSearch', inputValue);
     localStorage.setItem('shortMovies', shortMovies);
 
