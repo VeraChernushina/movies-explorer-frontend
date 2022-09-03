@@ -79,8 +79,12 @@
   transition: 0.2s ease;
 }
 
-.login__button:hover {
+.login__button:not([disabled]):hover {
   opacity: 0.8;
+}
+
+.login__button:disabled {
+  background-color:#A0A0A0;
 }
 
 .login__bottom {

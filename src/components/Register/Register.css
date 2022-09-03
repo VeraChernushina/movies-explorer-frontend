@@ -76,8 +76,12 @@
   transition: 0.2s ease;
 }
 
-.register__button:hover {
+.register__button:not([disabled]):hover {
   opacity: 0.8;
+}
+
+.register__button:disabled {
+  background-color:#A0A0A0;
 }
 
 .register__bottom {

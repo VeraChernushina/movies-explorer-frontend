@@ -39,6 +39,7 @@ const Login = ({ onLogin }) => {
           required
           value={enteredValues.email || ''}
           onChange={handleChange}
+          pattern={'^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$'}
         />
         <span className='register__error'>{errors.email}</span>
         <label className='login__label' htmlFor='password'>Пароль</label>
