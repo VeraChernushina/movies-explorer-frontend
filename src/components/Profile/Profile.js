@@ -21,6 +21,8 @@ const Profile = ({ onUpdateUser, onSignOut, loggedIn }) => {
     currentUser ? resetForm(currentUser) : resetForm();
   }, [currentUser, resetForm]);
 
+  const isValueSameAsWas = (!isFormValid || (currentUser.name === enteredValues.name && currentUser.email === enteredValues.email));
+
   return (
     <section>
       <Header loggedIn={loggedIn} />
@@ -56,7 +58,7 @@ const Profile = ({ onUpdateUser, onSignOut, loggedIn }) => {
             <button
               className='profile__edit'
               type='submit'
-              disabled={!isFormValid}
+              disabled={isValueSameAsWas}
             >
               Редактировать
             </button>
