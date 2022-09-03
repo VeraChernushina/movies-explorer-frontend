@@ -1,19 +1,14 @@
 import './FilterCheckbox.css';
 
 const FilterCheckbox = ({ isMovieFilter, onFilter }) => {
-  const filterMovies = (event) => {
-    onFilter(event.target.checked)
-    localStorage.setItem('filter', event.target.checked);
-  };
-
   return (
     <section className='filter'>
       <input
         type='checkbox'
         id='checkbox'
         className='filter__checkbox'
-        onInput={filterMovies}
-        value={isMovieFilter}
+        onChange={onFilter}
+        checked={isMovieFilter}
       />
       <label htmlFor='checkbox' className='filter__label'>Короткометражки</label>
     </section>

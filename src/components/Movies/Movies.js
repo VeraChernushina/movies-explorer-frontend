@@ -4,6 +4,7 @@ import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import SearchForm from '../SearchForm/SearchForm';
 import Footer from '../Footer/Footer';
 import Preloader from '../Preloader/Preloader';
+import { useLocation } from 'react-router-dom';
 
 import './Movies.css';
 
@@ -25,6 +26,7 @@ const Movies = ({
   const [filteredMovies, setFilteredMovies] = useState([]);
   const [notFound, setNotFound] = useState(false);
   const [isAllMovies, setIsAllMovies] = useState([]);
+  const location = useLocation();
 
   const handleSetFilteredMovies = (movies, userQuery, shortMoviesCheckbox) => {
     const moviesList = filterMovies(movies, userQuery, shortMoviesCheckbox);
@@ -51,6 +53,7 @@ const Movies = ({
       moviesApi
         .getMovies()
         .then(movies => {
+          localStorage.setItem('allMovies', JSON.stringify(movies));
           setIsAllMovies(movies);
           handleSetFilteredMovies(
             movies,
@@ -87,7 +90,7 @@ const Movies = ({
     } else {
       setShortMovies(false);
     }
-  }, []);
+  }, [location]);
 
   useEffect(() => {
     if (localStorage.getItem('movies')) {
@@ -103,7 +106,7 @@ const Movies = ({
         setFilteredMovies(movies);
       }
     }
-  }, []);
+  }, [location]);
 
   return (
     <section className='movies__page'>

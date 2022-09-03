@@ -1,25 +1,35 @@
+import { useEffect } from 'react';
 import './SearchForm.css';
 import FilterCheckbox from '../FilterCheckbox/FilterCheckbox';
 import useForm from '../../hooks/useForm';
+import { useLocation } from 'react-router-dom';
 
 const SearchForm = ({
-  isMovieFilter,
   onSearchMovies,
   onFilter,
   disabled,
-  isSavedMoviesPage
+  isSavedMoviesPage,
+  shortMovies,
 }) => {
   const { enteredValues, handleChange, resetForm, isFormValid } = useForm();
+  const location = useLocation();
 
   function handleFormSubmit(e) {
     e.preventDefault();
-    onSearchMovies(enteredValues.searchRequest, isFormValid, isMovieFilter);
+    onSearchMovies(enteredValues.searchRequest, isFormValid, shortMovies);
   }
 
   function handleSavedMoviesFormSubmit(e) {
     e.preventDefault()
-    onSearchMovies(enteredValues.searchRequest, isMovieFilter, resetForm);
+    onSearchMovies(enteredValues.searchRequest, shortMovies, resetForm);
   }
+
+  useEffect(() => {
+    if (location.pathname === '/movies' && localStorage.getItem('movieSearch')) {
+      const searchValue = localStorage.getItem('movieSearch');
+      enteredValues.searchRequest = searchValue;
+    }
+  }, [location]);
 
   return (
     <section className='search'>
@@ -45,7 +55,7 @@ const SearchForm = ({
             </button>
           </form>
 
-          <FilterCheckbox isMovieFilter={isMovieFilter} onFilter={onFilter} disabled={disabled} />
+          <FilterCheckbox isMovieFilter={shortMovies} onFilter={onFilter} disabled={disabled} />
         </>
       ) : (
         <>
@@ -69,7 +79,7 @@ const SearchForm = ({
             </button>
           </form>
 
-          <FilterCheckbox isMovieFilter={isMovieFilter} onFilter={onFilter} disabled={disabled} />
+          <FilterCheckbox isMovieFilter={shortMovies} onFilter={onFilter} disabled={disabled} />
         </>
       )}
 

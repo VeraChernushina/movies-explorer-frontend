@@ -7,6 +7,7 @@ import Preloader from '../Preloader/Preloader';
 import './SavedMovies.css';
 
 import { filterMovies, filterShortMovies } from '../../utils/utils';
+import { useLocation } from 'react-router-dom';
 
 const SavedMovies = ({
   loggedIn,
@@ -20,6 +21,7 @@ const SavedMovies = ({
   const [notFound, setNotFound] = useState(false);
   const [showedMovies, setShowedMovies] = useState(savedMovies);
   const [filteredMovies, setFilteredMovies] = useState(showedMovies);
+  const location = useLocation();
 
   const handleSearchSubmit = (inputValue) => {
     const moviesList = filterMovies(savedMovies, inputValue, shortMovies);
@@ -56,7 +58,7 @@ const SavedMovies = ({
       setShortMovies(false);
       setShowedMovies(savedMovies);
     }
-  }, [savedMovies]);
+  }, [savedMovies, location]);
 
   useEffect(() => {
     setFilteredMovies(savedMovies);
