@@ -8,5 +8,5 @@ export const MIDDLE_SCREEN_MOVIES_QTY = 8;
 export const SMALL_SCREEN_MOVIES_QTY = 5;
 export const MORE_MOVIES_BIG_SCREEN_QTY = 3;
 export const MORE_MOVIES_SMALL_SCREEN_QTY = 2;
-export const BIG_SCREEN = 768;
+export const BIG_SCREEN = 917;
 export const SMALL_SCREEN = 480;
