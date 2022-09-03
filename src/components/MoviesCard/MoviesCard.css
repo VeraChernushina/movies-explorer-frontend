@@ -89,6 +89,10 @@
   visibility: hidden;
 }
 
+.card__button_visible {
+  visibility: visible;
+}
+
 .card__button_hidden {
   display: none;
 }
