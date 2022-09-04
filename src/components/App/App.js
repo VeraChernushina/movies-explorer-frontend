@@ -37,8 +37,8 @@ const App = () => {
   const location = useLocation();
 
   useEffect(() => {
-    handleTokenCheck()
-  }, [])
+    handleTokenCheck();
+  }, [isLoggedIn])
 
   /*--------------------- Authorization ---------------------- */
 
@@ -172,9 +172,6 @@ const App = () => {
   const handleTokenCheck = () => {
     const path = location.pathname;
     const jwt = localStorage.getItem('jwt');
-    if (!jwt) {
-      return;
-    }
     getContent(jwt)
       .then((data) => {
         setIsLoggedIn(true);

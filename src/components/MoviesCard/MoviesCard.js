@@ -57,8 +57,17 @@ const MoviesCard = ({
           Сохранить
         </button>
       )}
-      {isMobile && (
+      {isMobile && isSavedMoviesPage && (
         <button className='card__button_delete card__button_visible' type='button' onClick={handleDeleteCard} />
+      )}
+      {isMobile && !isSavedMoviesPage && !saved && (
+        <button
+          className='card__button card__button_visible'
+          type='button'
+          onClick={handleSaveCard}
+        >
+          Сохранить
+        </button>
       )}
     </div>
   )
