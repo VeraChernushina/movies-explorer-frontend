@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Link, useRouteMatch } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import './Navigation.css';
 import BurgerMenu from '../BurgerMenu/BurgerMenu';
 
 const Navigation = ({ loggedIn }) => {
   const [isBurgerMenuOpen, setIsBurgerMenuOpen] = useState(false);
-  const routeMatch = useRouteMatch();
+  const location = useLocation().pathname;
 
   const toggleBurgerMenu = () => {
     setIsBurgerMenuOpen(!isBurgerMenuOpen);
@@ -15,15 +15,15 @@ const Navigation = ({ loggedIn }) => {
     <nav className='navigation'>
       {loggedIn ? (
         <>
-          <div className={routeMatch.path === '/' ? 'navigation__movies navigation__movies_white' : 'navigation__movies'}>
+          <div className={location === '/' ? 'navigation__movies navigation__movies_white' : 'navigation__movies'}>
             <Link
               to='/movies'
-              className={routeMatch.path === '/movies' ? 'navigation__movies-link_active' : 'navigation__movies-link'}>
+              className={location === '/movies' ? 'navigation__movies-link_active' : 'navigation__movies-link'}>
               Фильмы
             </Link>
             <Link
               to='/saved-movies'
-              className={routeMatch.path === '/saved-movies' ? 'navigation__movies-link_active' : 'navigation__movies-link'}>
+              className={location === '/saved-movies' ? 'navigation__movies-link_active' : 'navigation__movies-link'}>
               Сохранённые фильмы
             </Link>
           </div>
@@ -47,7 +47,7 @@ const Navigation = ({ loggedIn }) => {
       )}
       {!isBurgerMenuOpen && loggedIn ? (
         <button
-          className={routeMatch.path === '/' ? 'burger__button burger__button_white' :'burger__button'}
+          className={location === '/' ? 'burger__button burger__button_white' :'burger__button'}
           onClick={toggleBurgerMenu}
         />
       ) : <BurgerMenu onClose={toggleBurgerMenu} />

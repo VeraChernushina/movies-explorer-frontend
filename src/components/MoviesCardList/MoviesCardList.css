@@ -1,16 +1,17 @@
 .cards {
   display: block;
-  margin: 0 70px 80px;
+  margin: 0 70px 50px;
 }
 
 .cards__list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 360px));
-  column-gap: 30px;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  column-gap: 24px;
+  max-width: 1140px;
   row-gap: 58px;
   justify-content: center;
   padding: 0;
-  margin: 50px 0;
+  margin: 50px auto;
 }
 
 .cards__button {
@@ -24,14 +25,17 @@
   padding: 11px 0 9px;
   cursor: pointer;
   transition: .3s ease;
-}
-
-.cards__button_hidden {
-  display: none;
+  margin: 50px auto 0;
 }
 
 .cards__button:hover {
   opacity: 0.8;
+}
+
+@media screen and (max-width: 997px) {
+  .cards {
+    margin: 0 30px 50px;
+  }
 }
 
 @media screen and (max-width: 768px) {
