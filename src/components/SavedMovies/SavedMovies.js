@@ -21,6 +21,7 @@ const SavedMovies = ({
   const [notFound, setNotFound] = useState(false);
   const [showedMovies, setShowedMovies] = useState(savedMovies);
   const [filteredMovies, setFilteredMovies] = useState(showedMovies);
+  const [searchQuery, setSearchQuery] = useState('');
   const location = useLocation();
 
   const handleSearchSubmit = (inputValue) => {
@@ -31,6 +32,7 @@ const SavedMovies = ({
     }
 
     const moviesList = filterMovies(savedMovies, inputValue, shortMovies);
+    setSearchQuery(inputValue);
     if (moviesList.length === 0) {
       setNotFound(true);
       setPopupMessage('Ничего не найдено.');
@@ -62,9 +64,10 @@ const SavedMovies = ({
       setShowedMovies(filterShortMovies(savedMovies));
     } else {
       setShortMovies(false);
-      setShowedMovies(savedMovies);
+      const moviesList = filterMovies(savedMovies, searchQuery, shortMovies);
+      setShowedMovies(moviesList);
     }
-  }, [savedMovies, location]);
+  }, [savedMovies, location, shortMovies]);
 
   useEffect(() => {
     setFilteredMovies(savedMovies);

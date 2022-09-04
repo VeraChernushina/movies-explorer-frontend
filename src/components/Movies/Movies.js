@@ -29,7 +29,7 @@ const Movies = ({
   const location = useLocation();
 
   const handleSetFilteredMovies = (movies, userQuery, shortMoviesCheckbox) => {
-    const moviesList = filterMovies(movies, userQuery, shortMoviesCheckbox);
+    const moviesList = filterMovies(movies, userQuery, false);
     if (moviesList.length === 0) {
       setNotFound(true);
       setPopupMessage('Ничего не найдено.');
