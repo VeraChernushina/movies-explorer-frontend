@@ -1,4 +1,4 @@
-const BASE_API_URL = 'https://api.diploma.chernushina.nomoredomains.xyz';
+const BASE_API_URL = 'http://localhost:3000';
 
 const headers = {
   Accept: 'application/json',
