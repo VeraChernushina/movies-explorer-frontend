@@ -1,4 +1,4 @@
-const BASE_API_URL = 'https://movies-explorer-api-bgk2.onrender.com/';
+const BASE_API_URL = 'https://movies-explorer-api-bgk2.onrender.com';
 
 const headers = {
   Accept: 'application/json',
